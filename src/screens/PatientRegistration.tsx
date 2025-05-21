@@ -9,6 +9,7 @@ import {
 } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { theme } from '../../theme/theme';
+import Footer from '../components/Footer';
 
 const PatientRegistration = () => {
   const [name, setName] = useState('');
@@ -51,65 +52,69 @@ const PatientRegistration = () => {
 
   return (
     <SafeAreaView style={styles.container}>
-      <View style={styles.header}>
-        <Text style={styles.headerText}>Cadastro de Paciente</Text>
-      </View>
-
-      <View style={styles.formContainer}>
-        <Text style={styles.label}>Nome completo:</Text>
-        <View style={styles.inputContainer}>
-          <Ionicons name="person-outline" size={24} color={theme.colors.icon.active} />
-          <TextInput
-            style={styles.input}
-            value={name}
-            onChangeText={(text) => setName(formatName(text))}
-            placeholder="Digite o nome completo"
-            placeholderTextColor={theme.colors.subtext}
-            maxLength={100}
-          />
+      <View style={styles.content}>
+        <View style={styles.header}>
+          <Text style={styles.headerText}>Cadastro de Paciente</Text>
         </View>
 
-        <View style={styles.rowContainer}>
-          <View style={styles.columnContainer}>
-            <Text style={styles.label}>Idade:</Text>
-            <View style={styles.inputContainer}>
-              <Ionicons name="calendar-outline" size={24} color={theme.colors.icon.active} />
-              <TextInput
-                style={styles.input}
-                value={age}
-                onChangeText={(text) => setAge(formatAge(text))}
-                placeholder="Digite a idade"
-                placeholderTextColor={theme.colors.subtext}
-                keyboardType="numeric"
-                maxLength={3}
-              />
+        <View style={styles.formContainer}>
+          <Text style={styles.label}>Nome completo:</Text>
+          <View style={styles.inputContainer}>
+            <Ionicons name="person-outline" size={24} color={theme.colors.icon.active} />
+            <TextInput
+              style={styles.input}
+              value={name}
+              onChangeText={(text) => setName(formatName(text))}
+              placeholder="Digite o nome completo"
+              placeholderTextColor={theme.colors.subtext}
+              maxLength={100}
+            />
+          </View>
+
+          <View style={styles.rowContainer}>
+            <View style={styles.columnContainer}>
+              <Text style={styles.label}>Idade:</Text>
+              <View style={styles.inputContainer}>
+                <Ionicons name="calendar-outline" size={24} color={theme.colors.icon.active} />
+                <TextInput
+                  style={styles.input}
+                  value={age}
+                  onChangeText={(text) => setAge(formatAge(text))}
+                  placeholder="Digite a idade"
+                  placeholderTextColor={theme.colors.subtext}
+                  keyboardType="numeric"
+                  maxLength={3}
+                />
+              </View>
+            </View>
+
+            <View style={styles.columnContainer}>
+              <Text style={styles.label}>Sexo:</Text>
+              <View style={styles.inputContainer}>
+                <Ionicons name="male-female-outline" size={24} color={theme.colors.icon.active} />
+                <TextInput
+                  style={styles.input}
+                  value={gender}
+                  onChangeText={(text) => setGender(text.toUpperCase())}
+                  placeholder="M, F ou O"
+                  placeholderTextColor={theme.colors.subtext}
+                  maxLength={1}
+                />
+              </View>
             </View>
           </View>
 
-          <View style={styles.columnContainer}>
-            <Text style={styles.label}>Sexo:</Text>
-            <View style={styles.inputContainer}>
-              <Ionicons name="male-female-outline" size={24} color={theme.colors.icon.active} />
-              <TextInput
-                style={styles.input}
-                value={gender}
-                onChangeText={(text) => setGender(text.toUpperCase())}
-                placeholder="M, F ou O"
-                placeholderTextColor={theme.colors.subtext}
-                maxLength={1}
-              />
-            </View>
-          </View>
+          <TouchableOpacity 
+            style={[styles.button, !isFormValid && styles.buttonDisabled]}
+            disabled={!isFormValid}
+          >
+            <Text style={styles.buttonText}>Continuar</Text>
+            <Ionicons name="arrow-forward" size={24} color={theme.colors.background} />
+          </TouchableOpacity>
         </View>
-
-        <TouchableOpacity 
-          style={[styles.button, !isFormValid && styles.buttonDisabled]}
-          disabled={!isFormValid}
-        >
-          <Text style={styles.buttonText}>Continuar</Text>
-          <Ionicons name="arrow-forward" size={24} color={theme.colors.background} />
-        </TouchableOpacity>
       </View>
+
+      <Footer />
     </SafeAreaView>
   );
 };
@@ -118,6 +123,9 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: theme.colors.background,
+  },
+  content: {
+    flex: 1,
   },
   header: {
     padding: 16,
@@ -132,6 +140,7 @@ const styles = StyleSheet.create({
     color: theme.colors.text,
   },
   formContainer: {
+    flex: 1,
     padding: 16,
     gap: 16,
   },
