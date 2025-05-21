@@ -17,7 +17,6 @@ const PatientRegistration = () => {
   const [gender, setGender] = useState("");
 
   const formatName = (text: string) => {
-    // Remove numbers and special characters, but keep spaces
     const cleanedText = text.replace(/[^a-zA-ZÀ-ÿ\s]/g, "");
     return cleanedText
       .split(" ")
@@ -26,7 +25,6 @@ const PatientRegistration = () => {
   };
 
   const formatAge = (text: string) => {
-    // Only allow numbers, max 3 digits
     const numbersOnly = text.replace(/[^0-9]/g, "");
     if (numbersOnly.length > 3) return numbersOnly.slice(0, 3);
     return numbersOnly;
@@ -38,7 +36,6 @@ const PatientRegistration = () => {
   };
 
   const isValidName = (nameStr: string) => {
-    // Only trim when validating
     return nameStr.trim().length >= 3;
   };
 
@@ -131,7 +128,6 @@ const PatientRegistration = () => {
           </TouchableOpacity>
         </View>
       </View>
-
       <Footer />
     </SafeAreaView>
   );
