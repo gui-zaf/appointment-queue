@@ -1,4 +1,4 @@
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo } from "react";
 import {
   View,
   Text,
@@ -6,28 +6,28 @@ import {
   StyleSheet,
   SafeAreaView,
   TouchableOpacity,
-} from 'react-native';
-import { Ionicons } from '@expo/vector-icons';
-import { theme } from '../../theme/theme';
-import Footer from '../components/Footer';
+} from "react-native";
+import { Ionicons } from "@expo/vector-icons";
+import { theme } from "../../theme/theme";
+import Footer from "../components/Footer";
 
 const PatientRegistration = () => {
-  const [name, setName] = useState('');
-  const [age, setAge] = useState('');
-  const [gender, setGender] = useState('');
+  const [name, setName] = useState("");
+  const [age, setAge] = useState("");
+  const [gender, setGender] = useState("");
 
   const formatName = (text: string) => {
     // Remove numbers and special characters, but keep spaces
-    const cleanedText = text.replace(/[^a-zA-ZÀ-ÿ\s]/g, '');
+    const cleanedText = text.replace(/[^a-zA-ZÀ-ÿ\s]/g, "");
     return cleanedText
-      .split(' ')
-      .map(word => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase())
-      .join(' ');
+      .split(" ")
+      .map((word) => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase())
+      .join(" ");
   };
 
   const formatAge = (text: string) => {
     // Only allow numbers, max 3 digits
-    const numbersOnly = text.replace(/[^0-9]/g, '');
+    const numbersOnly = text.replace(/[^0-9]/g, "");
     if (numbersOnly.length > 3) return numbersOnly.slice(0, 3);
     return numbersOnly;
   };
@@ -43,7 +43,7 @@ const PatientRegistration = () => {
   };
 
   const isValidGender = (genderStr: string) => {
-    return ['M', 'F', 'O'].includes(genderStr);
+    return ["M", "F", "O"].includes(genderStr);
   };
 
   const isFormValid = useMemo(() => {
@@ -58,24 +58,34 @@ const PatientRegistration = () => {
         </View>
 
         <View style={styles.formContainer}>
-          <Text style={styles.label}>Nome completo:</Text>
-          <View style={styles.inputContainer}>
-            <Ionicons name="person-outline" size={24} color={theme.colors.icon.active} />
-            <TextInput
-              style={styles.input}
-              value={name}
-              onChangeText={(text) => setName(formatName(text))}
-              placeholder="Digite o nome completo"
-              placeholderTextColor={theme.colors.subtext}
-              maxLength={100}
-            />
+          <View style={styles.fixGap}>
+            <Text style={styles.label}>Nome completo:</Text>
+            <View style={styles.inputContainer}>
+              <Ionicons
+                name="person-outline"
+                size={24}
+                color={theme.colors.icon.active}
+              />
+              <TextInput
+                style={styles.input}
+                value={name}
+                onChangeText={(text) => setName(formatName(text))}
+                placeholder="Digite o nome completo"
+                placeholderTextColor={theme.colors.subtext}
+                maxLength={100}
+              />
+            </View>
           </View>
 
           <View style={styles.rowContainer}>
             <View style={styles.columnContainer}>
               <Text style={styles.label}>Idade:</Text>
               <View style={styles.inputContainer}>
-                <Ionicons name="calendar-outline" size={24} color={theme.colors.icon.active} />
+                <Ionicons
+                  name="calendar-outline"
+                  size={24}
+                  color={theme.colors.icon.active}
+                />
                 <TextInput
                   style={styles.input}
                   value={age}
@@ -91,7 +101,11 @@ const PatientRegistration = () => {
             <View style={styles.columnContainer}>
               <Text style={styles.label}>Sexo:</Text>
               <View style={styles.inputContainer}>
-                <Ionicons name="male-female-outline" size={24} color={theme.colors.icon.active} />
+                <Ionicons
+                  name="male-female-outline"
+                  size={24}
+                  color={theme.colors.icon.active}
+                />
                 <TextInput
                   style={styles.input}
                   value={gender}
@@ -104,12 +118,16 @@ const PatientRegistration = () => {
             </View>
           </View>
 
-          <TouchableOpacity 
+          <TouchableOpacity
             style={[styles.button, !isFormValid && styles.buttonDisabled]}
             disabled={!isFormValid}
           >
             <Text style={styles.buttonText}>Continuar</Text>
-            <Ionicons name="arrow-forward" size={24} color={theme.colors.background} />
+            <Ionicons
+              name="arrow-forward"
+              size={24}
+              color={theme.colors.background}
+            />
           </TouchableOpacity>
         </View>
       </View>
@@ -130,14 +148,17 @@ const styles = StyleSheet.create({
   header: {
     padding: 16,
     backgroundColor: theme.colors.background,
-    alignItems: 'center',
+    alignItems: "center",
     borderBottomWidth: 1,
     borderBottomColor: theme.colors.surface,
   },
   headerText: {
     fontSize: 20,
-    fontWeight: 'bold',
+    fontWeight: "bold",
     color: theme.colors.text,
+  },
+  fixGap: {
+    gap: 2,
   },
   formContainer: {
     flex: 1,
@@ -148,10 +169,11 @@ const styles = StyleSheet.create({
     fontSize: 16,
     color: theme.colors.text,
     marginBottom: 8,
+    fontWeight: "500",
   },
   inputContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
+    flexDirection: "row",
+    alignItems: "center",
     backgroundColor: theme.colors.surface,
     borderRadius: 8,
     paddingHorizontal: 12,
@@ -164,7 +186,7 @@ const styles = StyleSheet.create({
     fontSize: 16,
   },
   rowContainer: {
-    flexDirection: 'row',
+    flexDirection: "row",
     gap: 16,
   },
   columnContainer: {
@@ -174,9 +196,9 @@ const styles = StyleSheet.create({
     backgroundColor: theme.colors.primary,
     borderRadius: 8,
     height: 48,
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
     paddingHorizontal: 16,
     marginTop: 16,
   },
@@ -186,8 +208,8 @@ const styles = StyleSheet.create({
   buttonText: {
     color: theme.colors.background,
     fontSize: 16,
-    fontWeight: 'bold',
+    fontWeight: "bold",
   },
 });
 
-export default PatientRegistration; 
+export default PatientRegistration;
