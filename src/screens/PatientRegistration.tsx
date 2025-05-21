@@ -18,6 +18,9 @@ const PatientRegistration = () => {
   const [age, setAge] = useState("");
   const [gender, setGender] = useState("");
   const [modalVisible, setModalVisible] = useState(false);
+  const [nameError, setNameError] = useState(false);
+  const [ageError, setAgeError] = useState(false);
+  const [genderError, setGenderError] = useState(false);
 
   const formatName = (text: string) => {
     const cleanedText = text.replace(/[^a-zA-ZÀ-ÿ\s]/g, "");
@@ -35,7 +38,7 @@ const PatientRegistration = () => {
 
   const isValidAge = (ageStr: string) => {
     const age = parseInt(ageStr);
-    return !isNaN(age) && age > 0 && age <= 120;
+    return !isNaN(age) && age >= 0 && age <= 120;
   };
 
   const isValidName = (nameStr: string) => {
@@ -73,6 +76,24 @@ const PatientRegistration = () => {
     return 'Comum';
   };
 
+  const handleAgeChange = (text: string) => {
+    const formattedAge = formatAge(text);
+    setAge(formattedAge);
+    setAgeError(formattedAge !== "" && !isValidAge(formattedAge));
+  };
+
+  const handleNameChange = (text: string) => {
+    const formattedName = formatName(text);
+    setName(formattedName);
+    setNameError(formattedName !== "" && !isValidName(formattedName));
+  };
+
+  const handleGenderChange = (text: string) => {
+    const upperText = text.toUpperCase();
+    setGender(upperText);
+    setGenderError(upperText !== "" && !isValidGender(upperText));
+  };
+
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.content}>
@@ -83,61 +104,70 @@ const PatientRegistration = () => {
         <View style={styles.formContainer}>
           <View style={styles.fixGap}>
             <Text style={styles.label}>Nome completo:</Text>
-            <View style={styles.inputContainer}>
+            <View style={[styles.inputContainer, nameError && styles.inputError]}>
               <Ionicons
                 name="person-outline"
                 size={24}
-                color={theme.colors.icon.active}
+                color={nameError ? theme.colors.error : theme.colors.icon.active}
               />
               <TextInput
                 style={styles.input}
                 value={name}
-                onChangeText={(text) => setName(formatName(text))}
+                onChangeText={handleNameChange}
                 placeholder="Digite o nome completo"
                 placeholderTextColor={theme.colors.subtext}
                 maxLength={100}
               />
             </View>
+            {nameError && (
+              <Text style={styles.errorText}>Digite um nome válido (mínimo 3 caracteres)</Text>
+            )}
           </View>
 
           <View style={styles.rowContainer}>
             <View style={styles.columnContainer}>
               <Text style={styles.label}>Idade:</Text>
-              <View style={styles.inputContainer}>
+              <View style={[styles.inputContainer, ageError && styles.inputError]}>
                 <Ionicons
                   name="calendar-outline"
                   size={24}
-                  color={theme.colors.icon.active}
+                  color={ageError ? theme.colors.error : theme.colors.icon.active}
                 />
                 <TextInput
                   style={styles.input}
                   value={age}
-                  onChangeText={(text) => setAge(formatAge(text))}
+                  onChangeText={handleAgeChange}
                   placeholder="Digite a idade"
                   placeholderTextColor={theme.colors.subtext}
                   keyboardType="numeric"
                   maxLength={3}
                 />
               </View>
+              {ageError && (
+                <Text style={styles.errorText}>Digite uma idade válida (0-120)</Text>
+              )}
             </View>
 
             <View style={styles.columnContainer}>
               <Text style={styles.label}>Sexo:</Text>
-              <View style={styles.inputContainer}>
+              <View style={[styles.inputContainer, genderError && styles.inputError]}>
                 <Ionicons
                   name="male-female-outline"
                   size={24}
-                  color={theme.colors.icon.active}
+                  color={genderError ? theme.colors.error : theme.colors.icon.active}
                 />
                 <TextInput
                   style={styles.input}
                   value={gender}
-                  onChangeText={(text) => setGender(text.toUpperCase())}
+                  onChangeText={handleGenderChange}
                   placeholder="M, F ou O"
                   placeholderTextColor={theme.colors.subtext}
                   maxLength={1}
                 />
               </View>
+              {genderError && (
+                <Text style={styles.errorText}>Digite M, F ou O</Text>
+              )}
             </View>
           </View>
 
@@ -348,6 +378,16 @@ const styles = StyleSheet.create({
     color: '#5AA47B',
     fontWeight: 'bold',
     fontSize: 14,
+  },
+  inputError: {
+    borderWidth: 1,
+    borderColor: theme.colors.error,
+  },
+  errorText: {
+    color: theme.colors.error,
+    fontSize: 10,
+    marginTop: 4,
+    marginLeft: 4,
   },
 });
 

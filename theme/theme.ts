@@ -16,6 +16,9 @@ export const colors = {
     active: '#0071E3',
     disabled: '#979798',
   },
+
+  // Error color
+  error: '#FF3B30',
 } as const;
 
 export const theme = {
