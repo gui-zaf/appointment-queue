@@ -22,11 +22,13 @@ const Password: React.FC<PasswordProps> = ({
 }) => {
   const getPriorityColor = () => {
     if (isHistory) return "#BBBBBB";
-    return priority === "priority" ? "#FD4E4E" : "#5AA47B";
+    // Vermelho para prioridade, verde para normal
+    return priority === "priority" ? theme.colors.error : "#5AA47B";
   };
 
   const getPriorityBackground = () => {
     if (isHistory) return "#EDEDED";
+    // Fundo vermelho claro para prioridade, verde claro para normal
     return priority === "priority" ? "#FFDADA" : "#D8FFEA";
   };
 

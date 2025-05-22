@@ -28,38 +28,53 @@ const QueueScreen: React.FC = () => {
   const nextPasswords = queue.filter((item) => !item.isCalled);
 
   const handlePopulateQueue = () => {
-    // Array de nomes fictícios para demonstração
-    const names = [
-      "Maria Silva",
-      "João Santos",
-      "Ana Oliveira",
-      "Pedro Souza",
-      "Carla Lima",
-      "Lucas Costa",
-      "Julia Ferreira",
-      "Rafael Alves",
+    const patients = [
+      {
+        name: "Maria Silva",
+        age: 65,
+        password: "P001",
+        specialty: "Geriatria",
+        priority: "priority" as const,
+        roomNumber: 1,
+      },
+      {
+        name: "João Santos",
+        age: 45,
+        password: "C001",
+        specialty: "Clínico Geral",
+        priority: "normal" as const,
+        roomNumber: 2,
+      },
+      {
+        name: "Ana Oliveira",
+        age: 72,
+        password: "P002",
+        specialty: "Geriatria",
+        priority: "priority" as const,
+        roomNumber: 3,
+      },
+      {
+        name: "Pedro Souza",
+        age: 35,
+        password: "C002",
+        specialty: "Clínico Geral",
+        priority: "normal" as const,
+        roomNumber: 4,
+      },
+      {
+        name: "Carla Lima",
+        age: 68,
+        password: "P003",
+        specialty: "Geriatria",
+        priority: "priority" as const,
+        roomNumber: 5,
+      },
     ];
 
-    // Gera 5 senhas aleatórias
-    for (let i = 0; i < 5; i++) {
-      const randomName = names[Math.floor(Math.random() * names.length)];
-      const randomAge = Math.floor(Math.random() * 50) + 20; // Idade entre 20 e 70
-      const priority: "normal" | "priority" =
-        randomAge >= 60 ? "priority" : "normal";
-      const specialty = randomAge >= 60 ? "Geriatria" : "Clínico Geral";
-      const roomNumber = Math.floor(Math.random() * 10) + 1;
-
-      const patient = {
-        name: randomName,
-        age: randomAge,
-        password: `P${Math.floor(Math.random() * 1000)}`,
-        specialty,
-        priority,
-        roomNumber,
-      };
-
+    // Adiciona cada paciente à fila
+    patients.forEach((patient) => {
       addToQueue(patient);
-    }
+    });
   };
 
   useEffect(() => {
@@ -70,7 +85,7 @@ const QueueScreen: React.FC = () => {
 
     if (isQueueActive && currentPassword) {
       setCountdown(10); // Sempre começa em 10 segundos para a senha atual
-
+      
       timerRef.current = setInterval(() => {
         setCountdown((prev) => {
           if (prev === null || prev <= 1) {
@@ -138,10 +153,10 @@ const QueueScreen: React.FC = () => {
             <Text style={styles.sectionTitle}>Senha Atual</Text>
             {isQueueActive && countdown !== null && (
               <View style={styles.timerContainer}>
-                <MaterialCommunityIcons
-                  name="clock-outline"
-                  size={16}
-                  color={theme.colors.subtext}
+                <MaterialCommunityIcons 
+                  name="clock-outline" 
+                  size={16} 
+                  color={theme.colors.subtext} 
                 />
                 <Text style={styles.timerText}>
                   Próxima senha em: {countdown}s
