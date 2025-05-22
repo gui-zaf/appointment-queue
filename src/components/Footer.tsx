@@ -55,7 +55,7 @@ const Footer = ({ activeTab, onTabChange }: FooterProps) => {
         <FooterItem
           icon="time-outline"
           activeIcon="time"
-          label="Historico"
+          label="Histórico"
           isActive={activeTab === 'history'}
           onPress={() => onTabChange('history')}
         />
