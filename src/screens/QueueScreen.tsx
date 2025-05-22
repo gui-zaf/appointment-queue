@@ -1,11 +1,15 @@
 import React from 'react';
 import { View, StyleSheet } from 'react-native';
 import { theme } from '../../theme/theme';
+import EmptyState from '../components/EmptyState';
 
-const QueueScreen = () => {
+const QueueScreen: React.FC = () => {
   return (
     <View style={styles.container}>
-      {/* Queue content will go here */}
+      <EmptyState
+        icon="ticket-outline"
+        message="Ainda não há senhas na fila. Adicione um paciente na seção de cadastro."
+      />
     </View>
   );
 };

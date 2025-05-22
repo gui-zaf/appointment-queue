@@ -1,11 +1,15 @@
 import React from 'react';
 import { View, StyleSheet } from 'react-native';
 import { theme } from '../../theme/theme';
+import EmptyState from '../components/EmptyState';
 
-const HistoryScreen = () => {
+const HistoryScreen: React.FC = () => {
   return (
     <View style={styles.container}>
-      {/* History content will go here */}
+      <EmptyState
+        icon="history"
+        message="Aqui você encontrará as senhas que já foram chamadas."
+      />
     </View>
   );
 };
