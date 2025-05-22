@@ -11,6 +11,7 @@ interface ReviewPatientModalProps {
   gender: string;
   specialty: string;
   priority: string | null;
+  onConfirm: () => void;
 }
 
 const getGenderFull = (g: string) => {
@@ -27,6 +28,7 @@ const ReviewPatientModal: React.FC<ReviewPatientModalProps> = ({
   gender,
   specialty,
   priority,
+  onConfirm,
 }) => {
   return (
     <Modal
@@ -80,7 +82,7 @@ const ReviewPatientModal: React.FC<ReviewPatientModalProps> = ({
             <Ionicons name="medkit-outline" size={24} color={theme.colors.icon.active} />
             <Text style={styles.modalInfoText}>{specialty}</Text>
           </View>
-          <TouchableOpacity style={styles.modalButton}>
+          <TouchableOpacity style={styles.modalButton} onPress={onConfirm}>
             <View style={styles.modalButtonContent}>
               <Text style={styles.modalButtonText}>Confirmar</Text>
               <Ionicons name="checkmark" size={22} color={theme.colors.background} style={{ marginLeft: 8 }} />

@@ -6,18 +6,19 @@ import {
   StyleSheet,
   SafeAreaView,
   TouchableOpacity,
-  Modal,
 } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import { theme } from "../../theme/theme";
 import Footer from "../components/Footer";
 import ReviewPatientModal from '../components/ReviewPatientModal';
+import PasswordModal from '../components/PasswordModal';
 
 const PatientRegistration = () => {
   const [name, setName] = useState("");
   const [age, setAge] = useState("");
   const [gender, setGender] = useState("");
-  const [modalVisible, setModalVisible] = useState(false);
+  const [reviewModalVisible, setReviewModalVisible] = useState(false);
+  const [passwordModalVisible, setPasswordModalVisible] = useState(false);
   const [nameError, setNameError] = useState(false);
   const [ageError, setAgeError] = useState(false);
   const [genderError, setGenderError] = useState(false);
@@ -92,6 +93,23 @@ const PatientRegistration = () => {
     const upperText = text.toUpperCase();
     setGender(upperText);
     setGenderError(upperText !== "" && !isValidGender(upperText));
+  };
+
+  const handleConfirmReview = () => {
+    setReviewModalVisible(false);
+    setPasswordModalVisible(true);
+  };
+
+  const handleViewQueue = () => {
+    setPasswordModalVisible(false);
+    // TODO: Navigate to queue screen
+  };
+
+  const generatePassword = () => {
+    const priority = getPriority(age);
+    const prefix = priority === 'Prioridade' ? 'P' : 'C';
+    const randomNum = Math.floor(Math.random() * 1000).toString().padStart(3, '0');
+    return `${prefix}${randomNum}`;
   };
 
   return (
@@ -174,7 +192,7 @@ const PatientRegistration = () => {
           <TouchableOpacity
             style={[styles.button, !isFormValid && styles.buttonDisabled]}
             disabled={!isFormValid}
-            onPress={() => setModalVisible(true)}
+            onPress={() => setReviewModalVisible(true)}
           >
             <Text style={styles.buttonText}>Continuar</Text>
             <Ionicons
@@ -188,13 +206,22 @@ const PatientRegistration = () => {
       <Footer />
 
       <ReviewPatientModal
-        visible={modalVisible}
-        onClose={() => setModalVisible(false)}
+        visible={reviewModalVisible}
+        onClose={() => setReviewModalVisible(false)}
         name={name}
         age={age}
         gender={gender}
         specialty={getSpecialty(age)}
         priority={getPriority(age)}
+        onConfirm={handleConfirmReview}
+      />
+
+      <PasswordModal
+        visible={passwordModalVisible}
+        onClose={() => setPasswordModalVisible(false)}
+        password={generatePassword()}
+        priority={getPriority(age)}
+        onViewQueue={handleViewQueue}
       />
     </SafeAreaView>
   );
