@@ -18,7 +18,16 @@ const PasswordModal: React.FC<PasswordModalProps> = ({
   priority,
   onViewQueue,
 }) => {
-  const currentDate = new Date().toLocaleDateString('pt-BR');
+  const now = new Date();
+  const formattedDateTime = now.toLocaleString('pt-BR', {
+    day: '2-digit',
+    month: '2-digit',
+    year: 'numeric',
+    hour: '2-digit',
+    minute: '2-digit',
+    second: '2-digit',
+    hour12: false,
+  });
 
   return (
     <Modal
@@ -34,7 +43,7 @@ const PasswordModal: React.FC<PasswordModalProps> = ({
       >
         <View style={styles.modalContainer} pointerEvents="box-none">
           <View style={styles.modalTitleRow}>
-            <Text style={styles.modalTitle}>Senha</Text>
+            <Text style={styles.modalTitle}>Senha do Paciente</Text>
           </View>
           <View style={styles.modalDivider} />
           
@@ -46,6 +55,7 @@ const PasswordModal: React.FC<PasswordModalProps> = ({
               name="key-outline" 
               size={24} 
               color={priority === 'Prioridade' ? '#FD4E4E' : '#5AA47B'} 
+              style={styles.passwordIcon}
             />
             <Text style={[
               styles.passwordText,
@@ -55,8 +65,6 @@ const PasswordModal: React.FC<PasswordModalProps> = ({
             </Text>
           </View>
 
-          <Text style={styles.dateText}>{currentDate}</Text>
-
           <View style={styles.infoContainer}>
             <Ionicons name="information-circle-outline" size={24} color={theme.colors.icon.active} />
             <Text style={styles.infoText}>
@@ -64,10 +72,12 @@ const PasswordModal: React.FC<PasswordModalProps> = ({
             </Text>
           </View>
 
+          <Text style={styles.dateText}>Senha gerada em: {formattedDateTime}</Text>
+
           <TouchableOpacity style={styles.modalButton} onPress={onViewQueue}>
             <View style={styles.modalButtonContent}>
               <Text style={styles.modalButtonText}>Ver fila</Text>
-              <Ionicons name="list" size={22} color={theme.colors.background} style={{ marginLeft: 8 }} />
+              <Ionicons name="list" size={22} color={theme.colors.background} />
             </View>
           </TouchableOpacity>
         </View>
@@ -120,27 +130,32 @@ const styles = StyleSheet.create({
   passwordContainer: {
     flexDirection: 'row',
     alignItems: 'center',
-    justifyContent: 'center',
-    gap: 8,
     padding: 16,
-    borderRadius: 16,
+    borderRadius: 8,
     marginBottom: 8,
+    position: 'relative',
+  },
+  passwordIcon: {
+    position: 'absolute',
+    left: 16,
   },
   passwordText: {
     fontSize: 24,
     fontWeight: 'bold',
+    flex: 1,
+    textAlign: 'center',
   },
   dateText: {
     fontSize: 14,
     color: theme.colors.subtext,
     textAlign: 'center',
-    marginBottom: 16,
+    marginBottom: 20,
   },
   infoContainer: {
     flexDirection: 'row',
     alignItems: 'center',
     gap: 8,
-    marginBottom: 20,
+    marginBottom: 12,
     padding: 12,
     backgroundColor: theme.colors.surface,
     borderRadius: 8,
@@ -161,7 +176,7 @@ const styles = StyleSheet.create({
   modalButtonContent: {
     flexDirection: 'row',
     alignItems: 'center',
-    justifyContent: 'center',
+    justifyContent: 'space-between',
     width: '100%',
   },
   modalButtonText: {
