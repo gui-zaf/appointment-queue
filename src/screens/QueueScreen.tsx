@@ -7,12 +7,40 @@ import { useQueue } from '../contexts/QueueContext';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 
 const QueueScreen: React.FC = () => {
-  const { queue, updateQueue, isQueueActive, startQueue, stopQueue } = useQueue();
+  const { queue, updateQueue, isQueueActive, startQueue, stopQueue, addToQueue } = useQueue();
   const [countdown, setCountdown] = useState<number | null>(null);
   const timerRef = useRef<NodeJS.Timeout | null>(null);
 
   const currentPassword = queue.find(item => item.isCalled);
   const nextPasswords = queue.filter(item => !item.isCalled);
+
+  const handlePopulateQueue = () => {
+    // Array de nomes fictícios para demonstração
+    const names = [
+      "Maria Silva", "João Santos", "Ana Oliveira", "Pedro Souza",
+      "Carla Lima", "Lucas Costa", "Julia Ferreira", "Rafael Alves"
+    ];
+
+    // Gera 5 senhas aleatórias
+    for (let i = 0; i < 5; i++) {
+      const randomName = names[Math.floor(Math.random() * names.length)];
+      const randomAge = Math.floor(Math.random() * 50) + 20; // Idade entre 20 e 70
+      const priority: 'normal' | 'priority' = randomAge >= 60 ? 'priority' : 'normal';
+      const specialty = randomAge >= 60 ? 'Geriatria' : 'Clínico Geral';
+      const roomNumber = Math.floor(Math.random() * 10) + 1;
+
+      const patient = {
+        name: randomName,
+        age: randomAge,
+        password: `P${Math.floor(Math.random() * 1000)}`,
+        specialty,
+        priority,
+        roomNumber
+      };
+
+      addToQueue(patient);
+    }
+  };
 
   useEffect(() => {
     // Limpa o timer anterior se existir
@@ -43,7 +71,7 @@ const QueueScreen: React.FC = () => {
         clearInterval(timerRef.current);
       }
     };
-  }, [isQueueActive, currentPassword?.patient.password]); // Dependência apenas na senha atual
+  }, [isQueueActive, currentPassword?.patient.password]);
 
   const handlePasswordPress = (password: string) => {
     // Primeiro, vamos "deschamar" todas as senhas
@@ -70,6 +98,16 @@ const QueueScreen: React.FC = () => {
           icon="ticket-outline"
           message="A fila está vazia no momento."
         />
+        <TouchableOpacity
+          style={[styles.floatingButton, styles.globeButton]}
+          onPress={handlePopulateQueue}
+        >
+          <MaterialCommunityIcons
+            name="earth"
+            size={32}
+            color={theme.colors.background}
+          />
+        </TouchableOpacity>
       </View>
     );
   }
@@ -199,6 +237,9 @@ const styles = StyleSheet.create({
   },
   stopButton: {
     backgroundColor: theme.colors.error,
+  },
+  globeButton: {
+    backgroundColor: theme.colors.primary,
   },
 });
 
