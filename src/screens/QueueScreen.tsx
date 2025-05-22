@@ -1,32 +1,52 @@
-import React, { useState, useEffect, useRef } from 'react';
-import { View, StyleSheet, ScrollView, Text, TouchableOpacity } from 'react-native';
-import { theme } from '../../theme/theme';
-import Password from '../components/Password';
-import EmptyState from '../components/EmptyState';
-import { useQueue } from '../contexts/QueueContext';
-import { MaterialCommunityIcons } from '@expo/vector-icons';
+import React, { useState, useEffect, useRef } from "react";
+import {
+  View,
+  StyleSheet,
+  ScrollView,
+  Text,
+  TouchableOpacity,
+} from "react-native";
+import { theme } from "../../theme/theme";
+import Password from "../components/Password";
+import EmptyState from "../components/EmptyState";
+import { useQueue } from "../contexts/QueueContext";
+import { MaterialCommunityIcons } from "@expo/vector-icons";
 
 const QueueScreen: React.FC = () => {
-  const { queue, updateQueue, isQueueActive, startQueue, stopQueue, addToQueue } = useQueue();
+  const {
+    queue,
+    updateQueue,
+    isQueueActive,
+    startQueue,
+    stopQueue,
+    addToQueue,
+  } = useQueue();
   const [countdown, setCountdown] = useState<number | null>(null);
   const timerRef = useRef<NodeJS.Timeout | null>(null);
 
-  const currentPassword = queue.find(item => item.isCalled);
-  const nextPasswords = queue.filter(item => !item.isCalled);
+  const currentPassword = queue.find((item) => item.isCalled);
+  const nextPasswords = queue.filter((item) => !item.isCalled);
 
   const handlePopulateQueue = () => {
     // Array de nomes fictícios para demonstração
     const names = [
-      "Maria Silva", "João Santos", "Ana Oliveira", "Pedro Souza",
-      "Carla Lima", "Lucas Costa", "Julia Ferreira", "Rafael Alves"
+      "Maria Silva",
+      "João Santos",
+      "Ana Oliveira",
+      "Pedro Souza",
+      "Carla Lima",
+      "Lucas Costa",
+      "Julia Ferreira",
+      "Rafael Alves",
     ];
 
     // Gera 5 senhas aleatórias
     for (let i = 0; i < 5; i++) {
       const randomName = names[Math.floor(Math.random() * names.length)];
       const randomAge = Math.floor(Math.random() * 50) + 20; // Idade entre 20 e 70
-      const priority: 'normal' | 'priority' = randomAge >= 60 ? 'priority' : 'normal';
-      const specialty = randomAge >= 60 ? 'Geriatria' : 'Clínico Geral';
+      const priority: "normal" | "priority" =
+        randomAge >= 60 ? "priority" : "normal";
+      const specialty = randomAge >= 60 ? "Geriatria" : "Clínico Geral";
       const roomNumber = Math.floor(Math.random() * 10) + 1;
 
       const patient = {
@@ -35,7 +55,7 @@ const QueueScreen: React.FC = () => {
         password: `P${Math.floor(Math.random() * 1000)}`,
         specialty,
         priority,
-        roomNumber
+        roomNumber,
       };
 
       addToQueue(patient);
@@ -50,9 +70,9 @@ const QueueScreen: React.FC = () => {
 
     if (isQueueActive && currentPassword) {
       setCountdown(10); // Sempre começa em 10 segundos para a senha atual
-      
+
       timerRef.current = setInterval(() => {
-        setCountdown(prev => {
+        setCountdown((prev) => {
           if (prev === null || prev <= 1) {
             if (timerRef.current) {
               clearInterval(timerRef.current);
@@ -75,16 +95,14 @@ const QueueScreen: React.FC = () => {
 
   const handlePasswordPress = (password: string) => {
     // Primeiro, vamos "deschamar" todas as senhas
-    const updatedQueue = queue.map(item => ({
+    const updatedQueue = queue.map((item) => ({
       ...item,
-      isCalled: false
+      isCalled: false,
     }));
 
     // Agora vamos chamar a senha clicada
-    const finalQueue = updatedQueue.map(item => 
-      item.patient.password === password
-        ? { ...item, isCalled: true }
-        : item
+    const finalQueue = updatedQueue.map((item) =>
+      item.patient.password === password ? { ...item, isCalled: true } : item
     );
 
     // Atualizar a fila
@@ -120,10 +138,10 @@ const QueueScreen: React.FC = () => {
             <Text style={styles.sectionTitle}>Senha Atual</Text>
             {isQueueActive && countdown !== null && (
               <View style={styles.timerContainer}>
-                <MaterialCommunityIcons 
-                  name="clock-outline" 
-                  size={16} 
-                  color={theme.colors.subtext} 
+                <MaterialCommunityIcons
+                  name="clock-outline"
+                  size={16}
+                  color={theme.colors.subtext}
                 />
                 <Text style={styles.timerText}>
                   Próxima senha em: {countdown}s
@@ -175,7 +193,10 @@ const QueueScreen: React.FC = () => {
       </ScrollView>
 
       <TouchableOpacity
-        style={[styles.floatingButton, isQueueActive ? styles.stopButton : styles.startButton]}
+        style={[
+          styles.floatingButton,
+          isQueueActive ? styles.stopButton : styles.startButton,
+        ]}
         onPress={isQueueActive ? stopQueue : startQueue}
       >
         <MaterialCommunityIcons
@@ -199,18 +220,18 @@ const styles = StyleSheet.create({
   sectionHeader: {
     paddingHorizontal: 16,
     marginBottom: 8,
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
   },
   sectionTitle: {
     fontSize: 18,
-    fontWeight: 'bold',
+    fontWeight: "bold",
     color: theme.colors.text,
   },
   timerContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
+    flexDirection: "row",
+    alignItems: "center",
     gap: 4,
   },
   timerText: {
@@ -218,16 +239,16 @@ const styles = StyleSheet.create({
     color: theme.colors.subtext,
   },
   floatingButton: {
-    position: 'absolute',
+    position: "absolute",
     right: 24,
     bottom: 24,
     width: 64,
     height: 64,
     borderRadius: 32,
-    justifyContent: 'center',
-    alignItems: 'center',
+    justifyContent: "center",
+    alignItems: "center",
     elevation: 5,
-    shadowColor: '#000',
+    shadowColor: "#000",
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.25,
     shadowRadius: 3.84,
@@ -243,4 +264,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default QueueScreen; 
+export default QueueScreen;

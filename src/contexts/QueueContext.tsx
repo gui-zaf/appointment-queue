@@ -1,11 +1,17 @@
-import React, { createContext, useContext, useState, useEffect, useRef } from 'react';
+import React, {
+  createContext,
+  useContext,
+  useState,
+  useEffect,
+  useRef,
+} from "react";
 
 interface Patient {
   name: string;
   age: number;
   password: string;
   specialty: string;
-  priority: 'normal' | 'priority';
+  priority: "normal" | "priority";
   roomNumber: number;
 }
 
@@ -31,7 +37,9 @@ const PRIORITY_TIMER = 5000; // 5 segundos para senhas prioritárias
 const NORMAL_TIMER = 10000; // 10 segundos para senhas normais
 const CURRENT_TIMER = 10000; // 10 segundos para senha atual
 
-export const QueueProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+export const QueueProvider: React.FC<{ children: React.ReactNode }> = ({
+  children,
+}) => {
   const [queue, setQueue] = useState<QueueItem[]>([]);
   const [history, setHistory] = useState<QueueItem[]>([]);
   const [isQueueActive, setIsQueueActive] = useState(false);
@@ -56,26 +64,26 @@ export const QueueProvider: React.FC<{ children: React.ReactNode }> = ({ childre
         return 0;
       }
       // Prioridade vem primeiro
-      return a.patient.priority === 'priority' ? -1 : 1;
+      return a.patient.priority === "priority" ? -1 : 1;
     });
   };
 
   const addToQueue = (patient: Patient) => {
-    setQueue(prev => {
+    setQueue((prev) => {
       const newQueue = [...prev, { patient, isCalled: false }];
       return sortQueue(newQueue);
     });
   };
 
   const moveToHistory = (item: QueueItem) => {
-    setHistory(prev => [...prev, item]);
+    setHistory((prev) => [...prev, item]);
   };
 
   const processNextInQueue = () => {
-    setQueue(prev => {
+    setQueue((prev) => {
       // Remove a senha atual da fila
-      const remainingQueue = prev.filter(item => !item.isCalled);
-      
+      const remainingQueue = prev.filter((item) => !item.isCalled);
+
       // Se não houver mais senhas, retorna a fila vazia
       if (remainingQueue.length === 0) {
         return [];
@@ -83,9 +91,9 @@ export const QueueProvider: React.FC<{ children: React.ReactNode }> = ({ childre
 
       // Pega a próxima senha (já ordenada por prioridade)
       const nextItem = remainingQueue[0];
-      
+
       // Marca a próxima senha como chamada
-      return remainingQueue.map(item => 
+      return remainingQueue.map((item) =>
         item.patient.password === nextItem.patient.password
           ? { ...item, isCalled: true }
           : item
@@ -97,8 +105,8 @@ export const QueueProvider: React.FC<{ children: React.ReactNode }> = ({ childre
   useEffect(() => {
     if (!isQueueActive) return;
 
-    const currentPassword = queue.find(item => item.isCalled);
-    
+    const currentPassword = queue.find((item) => item.isCalled);
+
     if (currentPassword) {
       // Limpa o timer anterior se existir
       if (timerRef.current) {
@@ -107,22 +115,22 @@ export const QueueProvider: React.FC<{ children: React.ReactNode }> = ({ childre
 
       // Configura o timer para mover a senha atual para o histórico
       timerRef.current = setTimeout(() => {
-        setQueue(prev => {
-          const currentItem = prev.find(item => item.isCalled);
+        setQueue((prev) => {
+          const currentItem = prev.find((item) => item.isCalled);
           if (currentItem) {
             moveToHistory(currentItem);
             // Após mover para o histórico, processa a próxima senha imediatamente
-            const remainingQueue = prev.filter(item => !item.isCalled);
+            const remainingQueue = prev.filter((item) => !item.isCalled);
             if (remainingQueue.length > 0) {
               const nextItem = remainingQueue[0];
-              return remainingQueue.map(item => 
+              return remainingQueue.map((item) =>
                 item.patient.password === nextItem.patient.password
                   ? { ...item, isCalled: true }
                   : item
               );
             }
           }
-          return prev.filter(item => !item.isCalled);
+          return prev.filter((item) => !item.isCalled);
         });
       }, CURRENT_TIMER);
     }
@@ -138,8 +146,8 @@ export const QueueProvider: React.FC<{ children: React.ReactNode }> = ({ childre
   useEffect(() => {
     if (!isQueueActive) return;
 
-    const currentPassword = queue.find(item => item.isCalled);
-    const nextPassword = queue.find(item => !item.isCalled);
+    const currentPassword = queue.find((item) => item.isCalled);
+    const nextPassword = queue.find((item) => !item.isCalled);
 
     if (!currentPassword && nextPassword) {
       processNextInQueue();
@@ -151,16 +159,18 @@ export const QueueProvider: React.FC<{ children: React.ReactNode }> = ({ childre
   };
 
   return (
-    <QueueContext.Provider value={{ 
-      queue, 
-      history, 
-      isQueueActive,
-      startQueue,
-      stopQueue,
-      addToQueue, 
-      callNext: processNextInQueue, 
-      updateQueue 
-    }}>
+    <QueueContext.Provider
+      value={{
+        queue,
+        history,
+        isQueueActive,
+        startQueue,
+        stopQueue,
+        addToQueue,
+        callNext: processNextInQueue,
+        updateQueue,
+      }}
+    >
       {children}
     </QueueContext.Provider>
   );
@@ -170,8 +180,8 @@ export const useQueue = () => {
   const context = useContext(QueueContext);
 
   if (!context) {
-    throw new Error('useQueue must be used within a QueueProvider');
+    throw new Error("useQueue must be used within a QueueProvider");
   }
 
   return context;
-}; 
+};

@@ -1,12 +1,12 @@
-import React from 'react';
-import { View, Text, StyleSheet } from 'react-native';
-import { MaterialCommunityIcons } from '@expo/vector-icons';
-import { theme } from '../../theme/theme';
+import React from "react";
+import { View, Text, StyleSheet } from "react-native";
+import { MaterialCommunityIcons } from "@expo/vector-icons";
+import { theme } from "../../theme/theme";
 
 interface PasswordProps {
   password: string;
   patientName: string;
-  priority: 'normal' | 'priority';
+  priority: "normal" | "priority";
   isCalled?: boolean;
   roomNumber?: number;
   isHistory?: boolean;
@@ -21,23 +21,25 @@ const Password: React.FC<PasswordProps> = ({
   isHistory = false,
 }) => {
   const getPriorityColor = () => {
-    if (isHistory) return '#BBBBBB';
-    return priority === 'priority' ? '#FD4E4E' : '#5AA47B';
+    if (isHistory) return "#BBBBBB";
+    return priority === "priority" ? "#FD4E4E" : "#5AA47B";
   };
 
   const getPriorityBackground = () => {
-    if (isHistory) return '#EDEDED';
-    return priority === 'priority' ? '#FFDADA' : '#D8FFEA';
+    if (isHistory) return "#EDEDED";
+    return priority === "priority" ? "#FFDADA" : "#D8FFEA";
   };
 
   return (
-    <View style={[
-      styles.container,
-      {
-        borderColor: getPriorityColor(),
-        backgroundColor: getPriorityBackground(),
-      }
-    ]}>
+    <View
+      style={[
+        styles.container,
+        {
+          borderColor: getPriorityColor(),
+          backgroundColor: getPriorityBackground(),
+        },
+      ]}
+    >
       <View style={styles.content}>
         <View style={styles.leftSection}>
           <Text style={[styles.password, { color: getPriorityColor() }]}>
@@ -47,7 +49,7 @@ const Password: React.FC<PasswordProps> = ({
             {patientName}
           </Text>
         </View>
-        
+
         <View style={styles.rightSection}>
           {isCalled && roomNumber !== undefined && (
             <View style={styles.roomSection}>
@@ -80,46 +82,46 @@ const styles = StyleSheet.create({
     padding: 16,
     marginVertical: 8,
     marginHorizontal: 16,
-    shadowColor: '#000',
+    shadowColor: "#000",
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.1,
     shadowRadius: 4,
     elevation: 3,
   },
   content: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
   },
   leftSection: {
     flex: 1,
   },
   rightSection: {
-    flexDirection: 'row',
-    alignItems: 'center',
+    flexDirection: "row",
+    alignItems: "center",
     gap: 8,
   },
   password: {
     fontSize: 24,
-    fontWeight: 'bold',
+    fontWeight: "bold",
     marginBottom: 4,
   },
   patientName: {
     fontSize: 16,
-    fontWeight: '500',
+    fontWeight: "500",
   },
   roomSection: {
-    flexDirection: 'row',
-    alignItems: 'center',
+    flexDirection: "row",
+    alignItems: "center",
     gap: 8,
   },
   roomNumber: {
     fontSize: 20,
-    fontWeight: 'bold',
+    fontWeight: "bold",
   },
   chevron: {
     marginLeft: 8,
   },
 });
 
-export default Password; 
+export default Password;

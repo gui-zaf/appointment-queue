@@ -1,6 +1,6 @@
-import React from 'react';
-import { View, Text, StyleSheet } from 'react-native';
-import { theme } from '../../theme/theme';
+import React from "react";
+import { View, Text, StyleSheet } from "react-native";
+import { theme } from "../../theme/theme";
 
 interface HeaderProps {
   title: string;
@@ -29,4 +29,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default Header; 
+export default Header;

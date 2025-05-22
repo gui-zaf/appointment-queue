@@ -1,9 +1,9 @@
-import React from 'react';
-import { View, StyleSheet, ScrollView, Text } from 'react-native';
-import { theme } from '../../theme/theme';
-import Password from '../components/Password';
-import EmptyState from '../components/EmptyState';
-import { useQueue } from '../contexts/QueueContext';
+import React from "react";
+import { View, StyleSheet, ScrollView, Text } from "react-native";
+import { theme } from "../../theme/theme";
+import Password from "../components/Password";
+import EmptyState from "../components/EmptyState";
+import { useQueue } from "../contexts/QueueContext";
 
 const HistoryScreen: React.FC = () => {
   const { history } = useQueue();
@@ -11,10 +11,7 @@ const HistoryScreen: React.FC = () => {
   if (history.length === 0) {
     return (
       <View style={styles.container}>
-        <EmptyState
-          icon="history"
-          message="Nenhuma senha atendida ainda."
-        />
+        <EmptyState icon="history" message="Nenhuma senha atendida ainda." />
       </View>
     );
   }
@@ -55,9 +52,9 @@ const styles = StyleSheet.create({
   },
   sectionTitle: {
     fontSize: 18,
-    fontWeight: 'bold',
+    fontWeight: "bold",
     color: theme.colors.text,
   },
 });
 
-export default HistoryScreen; 
+export default HistoryScreen;

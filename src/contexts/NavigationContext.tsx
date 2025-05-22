@@ -1,16 +1,20 @@
-import React, { createContext, useContext, useState } from 'react';
+import React, { createContext, useContext, useState } from "react";
 
-type Tab = 'register' | 'queue' | 'history';
+type Tab = "register" | "queue" | "history";
 
 interface NavigationContextData {
   activeTab: Tab;
   changeTab: (tab: Tab) => void;
 }
 
-const NavigationContext = createContext<NavigationContextData>({} as NavigationContextData);
+const NavigationContext = createContext<NavigationContextData>(
+  {} as NavigationContextData
+);
 
-export const NavigationProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  const [activeTab, setActiveTab] = useState<Tab>('register');
+export const NavigationProvider: React.FC<{ children: React.ReactNode }> = ({
+  children,
+}) => {
+  const [activeTab, setActiveTab] = useState<Tab>("register");
 
   const changeTab = (tab: Tab) => {
     setActiveTab(tab);
@@ -27,8 +31,8 @@ export const useNavigation = () => {
   const context = useContext(NavigationContext);
 
   if (!context) {
-    throw new Error('useNavigation must be used within a NavigationProvider');
+    throw new Error("useNavigation must be used within a NavigationProvider");
   }
 
   return context;
-}; 
+};

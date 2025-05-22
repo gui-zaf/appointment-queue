@@ -1,15 +1,22 @@
-import React, { useEffect } from 'react';
-import { Modal, View, Text, TouchableOpacity, StyleSheet, Keyboard } from 'react-native';
-import { Ionicons } from '@expo/vector-icons';
-import { theme } from '../../theme/theme';
-import { useQueue } from '../contexts/QueueContext';
+import React, { useEffect } from "react";
+import {
+  Modal,
+  View,
+  Text,
+  TouchableOpacity,
+  StyleSheet,
+  Keyboard,
+} from "react-native";
+import { Ionicons } from "@expo/vector-icons";
+import { theme } from "../../theme/theme";
+import { useQueue } from "../contexts/QueueContext";
 
 interface Patient {
   name: string;
   age: number;
   password: string;
   specialty: string;
-  priority: 'normal' | 'priority';
+  priority: "normal" | "priority";
   roomNumber: number;
 }
 
@@ -35,13 +42,13 @@ const PasswordModal: React.FC<PasswordModalProps> = ({
   }, [visible]);
 
   const now = new Date();
-  const formattedDateTime = now.toLocaleString('pt-BR', {
-    day: '2-digit',
-    month: '2-digit',
-    year: 'numeric',
-    hour: '2-digit',
-    minute: '2-digit',
-    second: '2-digit',
+  const formattedDateTime = now.toLocaleString("pt-BR", {
+    day: "2-digit",
+    month: "2-digit",
+    year: "numeric",
+    hour: "2-digit",
+    minute: "2-digit",
+    second: "2-digit",
     hour12: false,
   });
 
@@ -55,7 +62,7 @@ const PasswordModal: React.FC<PasswordModalProps> = ({
     onViewQueue();
   };
 
-  const isPriority = patient.priority === 'priority';
+  const isPriority = patient.priority === "priority";
 
   return (
     <Modal
@@ -74,35 +81,49 @@ const PasswordModal: React.FC<PasswordModalProps> = ({
             <Text style={styles.modalTitle}>Senha do Paciente</Text>
           </View>
           <View style={styles.modalDivider} />
-          
-          <View style={[
-            styles.passwordContainer,
-            isPriority ? styles.pillPriority : styles.pillCommon
-          ]}>
-            <Ionicons 
-              name="key-outline" 
-              size={24} 
-              color={isPriority ? '#FD4E4E' : '#5AA47B'} 
+
+          <View
+            style={[
+              styles.passwordContainer,
+              isPriority ? styles.pillPriority : styles.pillCommon,
+            ]}
+          >
+            <Ionicons
+              name="key-outline"
+              size={24}
+              color={isPriority ? "#FD4E4E" : "#5AA47B"}
               style={styles.passwordIcon}
             />
-            <Text style={[
-              styles.passwordText,
-              isPriority ? styles.pillPriorityText : styles.pillCommonText
-            ]}>
+            <Text
+              style={[
+                styles.passwordText,
+                isPriority ? styles.pillPriorityText : styles.pillCommonText,
+              ]}
+            >
               {patient.password}
             </Text>
           </View>
 
           <View style={styles.infoContainer}>
-            <Ionicons name="information-circle-outline" size={24} color={theme.colors.icon.active} />
+            <Ionicons
+              name="information-circle-outline"
+              size={24}
+              color={theme.colors.icon.active}
+            />
             <Text style={styles.infoText}>
-              Os pacientes são atendidos por ordem de prioridade, não por ordem de chegada.
+              Os pacientes são atendidos por ordem de prioridade, não por ordem
+              de chegada.
             </Text>
           </View>
 
-          <Text style={styles.dateText}>Senha gerada em: {formattedDateTime}</Text>
+          <Text style={styles.dateText}>
+            Senha gerada em: {formattedDateTime}
+          </Text>
 
-          <TouchableOpacity style={styles.modalButton} onPress={handleViewQueue}>
+          <TouchableOpacity
+            style={styles.modalButton}
+            onPress={handleViewQueue}
+          >
             <View style={styles.modalButtonContent}>
               <Text style={styles.modalButtonText}>Ver fila</Text>
               <Ionicons name="list" size={22} color={theme.colors.background} />
@@ -117,71 +138,71 @@ const PasswordModal: React.FC<PasswordModalProps> = ({
 const styles = StyleSheet.create({
   modalOverlay: {
     flex: 1,
-    backgroundColor: 'rgba(0,0,0,0.4)',
-    justifyContent: 'center',
-    alignItems: 'center',
+    backgroundColor: "rgba(0,0,0,0.4)",
+    justifyContent: "center",
+    alignItems: "center",
   },
   modalContainer: {
     backgroundColor: theme.colors.background,
     borderRadius: 16,
     padding: 24,
-    width: '85%',
-    alignItems: 'stretch',
-    shadowColor: '#000',
+    width: "85%",
+    alignItems: "stretch",
+    shadowColor: "#000",
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.2,
     shadowRadius: 8,
     elevation: 5,
   },
   modalTitleRow: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'center',
-    width: '100%',
-    position: 'relative',
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "center",
+    width: "100%",
+    position: "relative",
     marginBottom: 0,
   },
   modalTitle: {
     fontSize: 20,
-    fontWeight: 'bold',
+    fontWeight: "bold",
     color: theme.colors.primary,
     marginBottom: 16,
-    textAlign: 'center',
-    alignSelf: 'center',
+    textAlign: "center",
+    alignSelf: "center",
   },
   modalDivider: {
     height: 1,
     backgroundColor: theme.colors.surface,
-    width: '100%',
+    width: "100%",
     marginBottom: 16,
   },
   passwordContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
+    flexDirection: "row",
+    alignItems: "center",
     padding: 16,
     borderRadius: 8,
     marginBottom: 8,
-    position: 'relative',
+    position: "relative",
   },
   passwordIcon: {
-    position: 'absolute',
+    position: "absolute",
     left: 16,
   },
   passwordText: {
     fontSize: 24,
-    fontWeight: 'bold',
+    fontWeight: "bold",
     flex: 1,
-    textAlign: 'center',
+    textAlign: "center",
   },
   dateText: {
     fontSize: 14,
     color: theme.colors.subtext,
-    textAlign: 'center',
+    textAlign: "center",
     marginBottom: 20,
   },
   infoContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
+    flexDirection: "row",
+    alignItems: "center",
     gap: 8,
     marginBottom: 12,
     padding: 12,
@@ -198,36 +219,36 @@ const styles = StyleSheet.create({
     borderRadius: 8,
     paddingVertical: 10,
     paddingHorizontal: 16,
-    alignSelf: 'stretch',
-    width: '100%',
+    alignSelf: "stretch",
+    width: "100%",
   },
   modalButtonContent: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    width: '100%',
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
+    width: "100%",
   },
   modalButtonText: {
     color: theme.colors.background,
     fontSize: 16,
-    fontWeight: 'bold',
+    fontWeight: "bold",
   },
   pillPriority: {
     borderWidth: 1,
-    borderColor: '#FD4E4E',
-    backgroundColor: '#FFDADA',
+    borderColor: "#FD4E4E",
+    backgroundColor: "#FFDADA",
   },
   pillPriorityText: {
-    color: '#FD4E4E',
+    color: "#FD4E4E",
   },
   pillCommon: {
     borderWidth: 1,
-    borderColor: '#5AA47B',
-    backgroundColor: '#D8FFEA',
+    borderColor: "#5AA47B",
+    backgroundColor: "#D8FFEA",
   },
   pillCommonText: {
-    color: '#5AA47B',
+    color: "#5AA47B",
   },
 });
 
-export default PasswordModal; 
+export default PasswordModal;

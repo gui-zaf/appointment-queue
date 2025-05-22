@@ -9,20 +9,20 @@ import {
 } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import { theme } from "../../theme/theme";
-import ReviewPatientModal from '../components/ReviewPatientModal';
-import PasswordModal from '../components/PasswordModal';
-import { useNavigation } from '../contexts/NavigationContext';
+import ReviewPatientModal from "../components/ReviewPatientModal";
+import PasswordModal from "../components/PasswordModal";
+import { useNavigation } from "../contexts/NavigationContext";
 
 interface Patient {
   name: string;
   age: number;
   password: string;
   specialty: string;
-  priority: 'normal' | 'priority';
+  priority: "normal" | "priority";
   roomNumber: number;
 }
 
-type Tab = 'register' | 'queue' | 'history';
+type Tab = "register" | "queue" | "history";
 
 const PatientRegistration = () => {
   const { changeTab } = useNavigation();
@@ -32,7 +32,9 @@ const PatientRegistration = () => {
   const [reviewModalVisible, setReviewModalVisible] = useState(false);
   const [passwordModalVisible, setPasswordModalVisible] = useState(false);
   const [generatedPassword, setGeneratedPassword] = useState("");
-  const [storedPriority, setStoredPriority] = useState<'Prioridade' | 'Comum'>('Comum');
+  const [storedPriority, setStoredPriority] = useState<"Prioridade" | "Comum">(
+    "Comum"
+  );
   const [storedPatient, setStoredPatient] = useState<Patient | null>(null);
   const [nameError, setNameError] = useState(false);
   const [ageError, setAgeError] = useState(false);
@@ -83,7 +85,8 @@ const PatientRegistration = () => {
     const age = parseInt(ageStr);
     if (isNaN(age)) return "-";
     if (age <= 12) return "Pediatria ou Neuropediatria";
-    if (age <= 18) return "Endocrinologia Pediátrica ou Psiquiatria Infantil e Adolescente";
+    if (age <= 18)
+      return "Endocrinologia Pediátrica ou Psiquiatria Infantil e Adolescente";
     if (age <= 40) return "Dermatologia ou Ginecologia/Urologia";
     if (age <= 60) return "Cardiologia ou Ortopedia";
     return "Geriatria ou Oftalmologia";
@@ -92,8 +95,8 @@ const PatientRegistration = () => {
   const getPriority = (ageStr: string) => {
     const age = parseInt(ageStr);
     if (isNaN(age)) return null;
-    if (age >= 60 || age <= 2) return 'Prioridade';
-    return 'Comum';
+    if (age >= 60 || age <= 2) return "Prioridade";
+    return "Comum";
   };
 
   const handleAgeChange = (text: string) => {
@@ -119,9 +122,11 @@ const PatientRegistration = () => {
     Keyboard.dismiss();
 
     // Create patient object
-    const priority = getPriority(age) || 'Comum';
-    const prefix = priority === 'Prioridade' ? 'P' : 'C';
-    const randomNum = Math.floor(Math.random() * 1000).toString().padStart(3, '0');
+    const priority = getPriority(age) || "Comum";
+    const prefix = priority === "Prioridade" ? "P" : "C";
+    const randomNum = Math.floor(Math.random() * 1000)
+      .toString()
+      .padStart(3, "0");
     const generatedPass = `${prefix}${randomNum}`;
     const roomNumber = Math.floor(Math.random() * 10) + 1; // Random number between 1 and 10
 
@@ -130,7 +135,7 @@ const PatientRegistration = () => {
       age: parseInt(age),
       password: generatedPass,
       specialty: getSpecialty(age),
-      priority: priority === 'Prioridade' ? 'priority' : 'normal',
+      priority: priority === "Prioridade" ? "priority" : "normal",
       roomNumber,
     };
 
@@ -141,17 +146,17 @@ const PatientRegistration = () => {
     nameInputRef.current?.blur();
     ageInputRef.current?.blur();
     genderInputRef.current?.blur();
-    
+
     // Clear all inputs
     setName("");
     setAge("");
     setGender("");
-    
+
     // Reset errors
     setNameError(false);
     setAgeError(false);
     setGenderError(false);
-    
+
     setReviewModalVisible(false);
     setPasswordModalVisible(true);
   };
@@ -159,7 +164,7 @@ const PatientRegistration = () => {
   const handleViewQueue = () => {
     Keyboard.dismiss();
     setPasswordModalVisible(false);
-    changeTab('queue');
+    changeTab("queue");
   };
 
   const handleOpenReviewModal = () => {
@@ -167,10 +172,10 @@ const PatientRegistration = () => {
     nameInputRef.current?.blur();
     ageInputRef.current?.blur();
     genderInputRef.current?.blur();
-    
+
     // Dismiss keyboard
     Keyboard.dismiss();
-    
+
     setReviewModalVisible(true);
   };
 
@@ -213,14 +218,18 @@ const PatientRegistration = () => {
             />
           </View>
           {nameError && (
-            <Text style={styles.errorText}>Digite um nome válido (mínimo 3 caracteres)</Text>
+            <Text style={styles.errorText}>
+              Digite um nome válido (mínimo 3 caracteres)
+            </Text>
           )}
         </View>
 
         <View style={styles.rowContainer}>
           <View style={styles.columnContainer}>
             <Text style={styles.label}>Idade:</Text>
-            <View style={[styles.inputContainer, ageError && styles.inputError]}>
+            <View
+              style={[styles.inputContainer, ageError && styles.inputError]}
+            >
               <Ionicons
                 name="calendar-outline"
                 size={24}
@@ -241,17 +250,23 @@ const PatientRegistration = () => {
               />
             </View>
             {ageError && (
-              <Text style={styles.errorText}>Digite uma idade válida (0-120)</Text>
+              <Text style={styles.errorText}>
+                Digite uma idade válida (0-120)
+              </Text>
             )}
           </View>
 
           <View style={styles.columnContainer}>
             <Text style={styles.label}>Sexo:</Text>
-            <View style={[styles.inputContainer, genderError && styles.inputError]}>
+            <View
+              style={[styles.inputContainer, genderError && styles.inputError]}
+            >
               <Ionicons
                 name="male-female-outline"
                 size={24}
-                color={genderError ? theme.colors.error : theme.colors.icon.active}
+                color={
+                  genderError ? theme.colors.error : theme.colors.icon.active
+                }
               />
               <TextInput
                 ref={genderInputRef}
