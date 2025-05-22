@@ -105,6 +105,16 @@ const PatientRegistration = () => {
     ageInputRef.current?.blur();
     genderInputRef.current?.blur();
     
+    // Clear all inputs
+    setName("");
+    setAge("");
+    setGender("");
+    
+    // Reset errors
+    setNameError(false);
+    setAgeError(false);
+    setGenderError(false);
+    
     setReviewModalVisible(false);
     setPasswordModalVisible(true);
   };
@@ -119,6 +129,20 @@ const PatientRegistration = () => {
     const prefix = priority === 'Prioridade' ? 'P' : 'C';
     const randomNum = Math.floor(Math.random() * 1000).toString().padStart(3, '0');
     return `${prefix}${randomNum}`;
+  };
+
+  const handleNameSubmit = () => {
+    ageInputRef.current?.focus();
+  };
+
+  const handleAgeSubmit = () => {
+    genderInputRef.current?.focus();
+  };
+
+  const handleGenderSubmit = () => {
+    if (isFormValid) {
+      setReviewModalVisible(true);
+    }
   };
 
   return (
@@ -145,6 +169,9 @@ const PatientRegistration = () => {
                 placeholder="Digite o nome completo"
                 placeholderTextColor={theme.colors.subtext}
                 maxLength={100}
+                returnKeyType="next"
+                onSubmitEditing={handleNameSubmit}
+                blurOnSubmit={false}
               />
             </View>
             {nameError && (
@@ -170,6 +197,9 @@ const PatientRegistration = () => {
                   placeholderTextColor={theme.colors.subtext}
                   keyboardType="numeric"
                   maxLength={3}
+                  returnKeyType="next"
+                  onSubmitEditing={handleAgeSubmit}
+                  blurOnSubmit={false}
                 />
               </View>
               {ageError && (
@@ -193,6 +223,8 @@ const PatientRegistration = () => {
                   placeholder="M, F ou O"
                   placeholderTextColor={theme.colors.subtext}
                   maxLength={1}
+                  returnKeyType="done"
+                  onSubmitEditing={handleGenderSubmit}
                 />
               </View>
               {genderError && (
