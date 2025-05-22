@@ -6,6 +6,7 @@ import {
   StyleSheet,
   SafeAreaView,
   TouchableOpacity,
+  Keyboard,
 } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import { theme } from "../../theme/theme";
@@ -102,6 +103,9 @@ const PatientRegistration = () => {
   };
 
   const handleConfirmReview = () => {
+    // Dismiss keyboard
+    Keyboard.dismiss();
+
     // Store priority before clearing inputs
     const priority = getPriority(age) || 'Comum';
     setStoredPriority(priority);
@@ -131,8 +135,21 @@ const PatientRegistration = () => {
   };
 
   const handleViewQueue = () => {
+    Keyboard.dismiss();
     setPasswordModalVisible(false);
     // TODO: Navigate to queue screen
+  };
+
+  const handleOpenReviewModal = () => {
+    // Blur all inputs to remove focus
+    nameInputRef.current?.blur();
+    ageInputRef.current?.blur();
+    genderInputRef.current?.blur();
+    
+    // Dismiss keyboard
+    Keyboard.dismiss();
+    
+    setReviewModalVisible(true);
   };
 
   const handleNameSubmit = () => {
@@ -240,7 +257,7 @@ const PatientRegistration = () => {
           <TouchableOpacity
             style={[styles.button, !isFormValid && styles.buttonDisabled]}
             disabled={!isFormValid}
-            onPress={() => setReviewModalVisible(true)}
+            onPress={handleOpenReviewModal}
           >
             <Text style={styles.buttonText}>Continuar</Text>
             <Ionicons
@@ -255,7 +272,10 @@ const PatientRegistration = () => {
 
       <ReviewPatientModal
         visible={reviewModalVisible}
-        onClose={() => setReviewModalVisible(false)}
+        onClose={() => {
+          Keyboard.dismiss();
+          setReviewModalVisible(false);
+        }}
         name={name}
         age={age}
         gender={gender}
@@ -266,7 +286,10 @@ const PatientRegistration = () => {
 
       <PasswordModal
         visible={passwordModalVisible}
-        onClose={() => setPasswordModalVisible(false)}
+        onClose={() => {
+          Keyboard.dismiss();
+          setPasswordModalVisible(false);
+        }}
         password={generatedPassword}
         priority={storedPriority}
         onViewQueue={handleViewQueue}
