@@ -39,22 +39,22 @@ const Footer = () => {
           icon="person-add-outline"
           activeIcon="person-add"
           label="Cadastro"
-          isActive={activeTab === 'cadastro'}
-          onPress={() => setActiveTab('cadastro')}
-        />
-        <FooterItem
-          icon="key-outline"
-          activeIcon="key"
-          label="Senha"
-          isActive={activeTab === 'senha'}
-          onPress={() => setActiveTab('senha')}
+          isActive={activeTab === 'register'}
+          onPress={() => setActiveTab('register')}
         />
         <FooterItem
           icon="list-outline"
           activeIcon="list"
           label="Fila"
-          isActive={activeTab === 'fila'}
-          onPress={() => setActiveTab('fila')}
+          isActive={activeTab === 'queue'}
+          onPress={() => setActiveTab('queue')}
+        />
+         <FooterItem
+          icon="time-outline"
+          activeIcon="time"
+          label="Historico"
+          isActive={activeTab === 'history'}
+          onPress={() => setActiveTab('history')}
         />
       </View>
     </SafeAreaView>
