@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { View, StyleSheet, ScrollView, Text, TouchableOpacity } from 'react-native';
 import { theme } from '../../theme/theme';
 import Password from '../components/Password';
@@ -8,9 +8,42 @@ import { MaterialCommunityIcons } from '@expo/vector-icons';
 
 const QueueScreen: React.FC = () => {
   const { queue, updateQueue, isQueueActive, startQueue, stopQueue } = useQueue();
+  const [countdown, setCountdown] = useState<number | null>(null);
+  const timerRef = useRef<NodeJS.Timeout | null>(null);
 
   const currentPassword = queue.find(item => item.isCalled);
   const nextPasswords = queue.filter(item => !item.isCalled);
+
+  useEffect(() => {
+    // Limpa o timer anterior se existir
+    if (timerRef.current) {
+      clearInterval(timerRef.current);
+    }
+
+    if (isQueueActive && currentPassword) {
+      setCountdown(10); // Sempre começa em 10 segundos para a senha atual
+      
+      timerRef.current = setInterval(() => {
+        setCountdown(prev => {
+          if (prev === null || prev <= 1) {
+            if (timerRef.current) {
+              clearInterval(timerRef.current);
+            }
+            return null;
+          }
+          return prev - 1;
+        });
+      }, 1000);
+    } else {
+      setCountdown(null);
+    }
+
+    return () => {
+      if (timerRef.current) {
+        clearInterval(timerRef.current);
+      }
+    };
+  }, [isQueueActive, currentPassword?.patient.password]); // Dependência apenas na senha atual
 
   const handlePasswordPress = (password: string) => {
     // Primeiro, vamos "deschamar" todas as senhas
@@ -47,6 +80,18 @@ const QueueScreen: React.FC = () => {
         <View style={styles.section}>
           <View style={styles.sectionHeader}>
             <Text style={styles.sectionTitle}>Senha Atual</Text>
+            {isQueueActive && countdown !== null && (
+              <View style={styles.timerContainer}>
+                <MaterialCommunityIcons 
+                  name="clock-outline" 
+                  size={16} 
+                  color={theme.colors.subtext} 
+                />
+                <Text style={styles.timerText}>
+                  Próxima senha em: {countdown}s
+                </Text>
+              </View>
+            )}
           </View>
           {currentPassword ? (
             <Password
@@ -116,11 +161,23 @@ const styles = StyleSheet.create({
   sectionHeader: {
     paddingHorizontal: 16,
     marginBottom: 8,
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
   },
   sectionTitle: {
     fontSize: 18,
     fontWeight: 'bold',
     color: theme.colors.text,
+  },
+  timerContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 4,
+  },
+  timerText: {
+    fontSize: 12,
+    color: theme.colors.subtext,
   },
   floatingButton: {
     position: 'absolute',

@@ -9,6 +9,7 @@ interface PasswordProps {
   priority: 'normal' | 'priority';
   isCalled?: boolean;
   roomNumber?: number;
+  isHistory?: boolean;
 }
 
 const Password: React.FC<PasswordProps> = ({
@@ -17,12 +18,15 @@ const Password: React.FC<PasswordProps> = ({
   priority,
   isCalled = false,
   roomNumber,
+  isHistory = false,
 }) => {
   const getPriorityColor = () => {
+    if (isHistory) return '#BBBBBB';
     return priority === 'priority' ? '#FD4E4E' : '#5AA47B';
   };
 
   const getPriorityBackground = () => {
+    if (isHistory) return '#EDEDED';
     return priority === 'priority' ? '#FFDADA' : '#D8FFEA';
   };
 

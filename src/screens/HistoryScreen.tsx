@@ -33,6 +33,7 @@ const HistoryScreen: React.FC = () => {
             priority={item.patient.priority}
             isCalled={true}
             roomNumber={item.patient.roomNumber}
+            isHistory={true}
           />
         ))}
       </View>

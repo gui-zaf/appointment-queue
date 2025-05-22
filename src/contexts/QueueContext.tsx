@@ -111,6 +111,16 @@ export const QueueProvider: React.FC<{ children: React.ReactNode }> = ({ childre
           const currentItem = prev.find(item => item.isCalled);
           if (currentItem) {
             moveToHistory(currentItem);
+            // Após mover para o histórico, processa a próxima senha imediatamente
+            const remainingQueue = prev.filter(item => !item.isCalled);
+            if (remainingQueue.length > 0) {
+              const nextItem = remainingQueue[0];
+              return remainingQueue.map(item => 
+                item.patient.password === nextItem.patient.password
+                  ? { ...item, isCalled: true }
+                  : item
+              );
+            }
           }
           return prev.filter(item => !item.isCalled);
         });
@@ -124,7 +134,7 @@ export const QueueProvider: React.FC<{ children: React.ReactNode }> = ({ childre
     };
   }, [queue, isQueueActive]);
 
-  // Efeito para gerenciar o timer de chamada da próxima senha
+  // Efeito para chamar automaticamente a próxima senha quando não há senha atual
   useEffect(() => {
     if (!isQueueActive) return;
 
@@ -132,24 +142,8 @@ export const QueueProvider: React.FC<{ children: React.ReactNode }> = ({ childre
     const nextPassword = queue.find(item => !item.isCalled);
 
     if (!currentPassword && nextPassword) {
-      // Limpa o timer anterior se existir
-      if (timerRef.current) {
-        clearTimeout(timerRef.current);
-      }
-
-      // Configura o timer para chamar a próxima senha
-      const timer = nextPassword.patient.priority === 'priority' ? PRIORITY_TIMER : NORMAL_TIMER;
-      
-      timerRef.current = setTimeout(() => {
-        processNextInQueue();
-      }, timer);
+      processNextInQueue();
     }
-
-    return () => {
-      if (timerRef.current) {
-        clearTimeout(timerRef.current);
-      }
-    };
   }, [queue, isQueueActive]);
 
   const updateQueue = (newQueue: QueueItem[]) => {
