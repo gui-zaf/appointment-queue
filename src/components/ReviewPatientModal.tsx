@@ -83,7 +83,7 @@ const ReviewPatientModal: React.FC<ReviewPatientModalProps> = ({
           <TouchableOpacity style={styles.modalButton}>
             <View style={styles.modalButtonContent}>
               <Text style={styles.modalButtonText}>Confirmar</Text>
-              <Ionicons name="checkmark-circle-outline" size={22} color={theme.colors.background} style={{ marginLeft: 8 }} />
+              <Ionicons name="checkmark" size={22} color={theme.colors.background} style={{ marginLeft: 8 }} />
             </View>
           </TouchableOpacity>
         </View>
@@ -184,7 +184,7 @@ const styles = StyleSheet.create({
     backgroundColor: theme.colors.primary,
     borderRadius: 8,
     paddingVertical: 10,
-    paddingHorizontal: 32,
+    paddingHorizontal: 16,
     alignSelf: 'stretch',
     width: '100%',
   },
