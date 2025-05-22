@@ -4,17 +4,19 @@ import {
   Text,
   TextInput,
   StyleSheet,
-  SafeAreaView,
   TouchableOpacity,
   Keyboard,
 } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import { theme } from "../../theme/theme";
-import Footer from "../components/Footer";
 import ReviewPatientModal from '../components/ReviewPatientModal';
 import PasswordModal from '../components/PasswordModal';
+import { useNavigation } from '../contexts/NavigationContext';
+
+type Tab = 'register' | 'queue' | 'history';
 
 const PatientRegistration = () => {
+  const { changeTab } = useNavigation();
   const [name, setName] = useState("");
   const [age, setAge] = useState("");
   const [gender, setGender] = useState("");
@@ -137,7 +139,7 @@ const PatientRegistration = () => {
   const handleViewQueue = () => {
     Keyboard.dismiss();
     setPasswordModalVisible(false);
-    // TODO: Navigate to queue screen
+    changeTab('queue');
   };
 
   const handleOpenReviewModal = () => {
@@ -167,108 +169,101 @@ const PatientRegistration = () => {
   };
 
   return (
-    <SafeAreaView style={styles.container}>
-      <View style={styles.content}>
-        <View style={styles.header}>
-          <Text style={styles.headerText}>Cadastro de Paciente</Text>
+    <View style={styles.container}>
+      <View style={styles.formContainer}>
+        <View style={styles.fixGap}>
+          <Text style={styles.label}>Nome completo:</Text>
+          <View style={[styles.inputContainer, nameError && styles.inputError]}>
+            <Ionicons
+              name="person-outline"
+              size={24}
+              color={nameError ? theme.colors.error : theme.colors.icon.active}
+            />
+            <TextInput
+              ref={nameInputRef}
+              style={styles.input}
+              value={name}
+              onChangeText={handleNameChange}
+              placeholder="Digite o nome completo"
+              placeholderTextColor={theme.colors.subtext}
+              maxLength={100}
+              returnKeyType="next"
+              onSubmitEditing={handleNameSubmit}
+              blurOnSubmit={false}
+            />
+          </View>
+          {nameError && (
+            <Text style={styles.errorText}>Digite um nome válido (mínimo 3 caracteres)</Text>
+          )}
         </View>
 
-        <View style={styles.formContainer}>
-          <View style={styles.fixGap}>
-            <Text style={styles.label}>Nome completo:</Text>
-            <View style={[styles.inputContainer, nameError && styles.inputError]}>
+        <View style={styles.rowContainer}>
+          <View style={styles.columnContainer}>
+            <Text style={styles.label}>Idade:</Text>
+            <View style={[styles.inputContainer, ageError && styles.inputError]}>
               <Ionicons
-                name="person-outline"
+                name="calendar-outline"
                 size={24}
-                color={nameError ? theme.colors.error : theme.colors.icon.active}
+                color={ageError ? theme.colors.error : theme.colors.icon.active}
               />
               <TextInput
-                ref={nameInputRef}
+                ref={ageInputRef}
                 style={styles.input}
-                value={name}
-                onChangeText={handleNameChange}
-                placeholder="Digite o nome completo"
+                value={age}
+                onChangeText={handleAgeChange}
+                placeholder="Digite a idade"
                 placeholderTextColor={theme.colors.subtext}
-                maxLength={100}
+                keyboardType="numeric"
+                maxLength={3}
                 returnKeyType="next"
-                onSubmitEditing={handleNameSubmit}
+                onSubmitEditing={handleAgeSubmit}
                 blurOnSubmit={false}
               />
             </View>
-            {nameError && (
-              <Text style={styles.errorText}>Digite um nome válido (mínimo 3 caracteres)</Text>
+            {ageError && (
+              <Text style={styles.errorText}>Digite uma idade válida (0-120)</Text>
             )}
           </View>
 
-          <View style={styles.rowContainer}>
-            <View style={styles.columnContainer}>
-              <Text style={styles.label}>Idade:</Text>
-              <View style={[styles.inputContainer, ageError && styles.inputError]}>
-                <Ionicons
-                  name="calendar-outline"
-                  size={24}
-                  color={ageError ? theme.colors.error : theme.colors.icon.active}
-                />
-                <TextInput
-                  ref={ageInputRef}
-                  style={styles.input}
-                  value={age}
-                  onChangeText={handleAgeChange}
-                  placeholder="Digite a idade"
-                  placeholderTextColor={theme.colors.subtext}
-                  keyboardType="numeric"
-                  maxLength={3}
-                  returnKeyType="next"
-                  onSubmitEditing={handleAgeSubmit}
-                  blurOnSubmit={false}
-                />
-              </View>
-              {ageError && (
-                <Text style={styles.errorText}>Digite uma idade válida (0-120)</Text>
-              )}
+          <View style={styles.columnContainer}>
+            <Text style={styles.label}>Sexo:</Text>
+            <View style={[styles.inputContainer, genderError && styles.inputError]}>
+              <Ionicons
+                name="male-female-outline"
+                size={24}
+                color={genderError ? theme.colors.error : theme.colors.icon.active}
+              />
+              <TextInput
+                ref={genderInputRef}
+                style={styles.input}
+                value={gender}
+                onChangeText={handleGenderChange}
+                placeholder="M, F ou O"
+                placeholderTextColor={theme.colors.subtext}
+                maxLength={1}
+                returnKeyType="done"
+                onSubmitEditing={handleGenderSubmit}
+              />
             </View>
-
-            <View style={styles.columnContainer}>
-              <Text style={styles.label}>Sexo:</Text>
-              <View style={[styles.inputContainer, genderError && styles.inputError]}>
-                <Ionicons
-                  name="male-female-outline"
-                  size={24}
-                  color={genderError ? theme.colors.error : theme.colors.icon.active}
-                />
-                <TextInput
-                  ref={genderInputRef}
-                  style={styles.input}
-                  value={gender}
-                  onChangeText={handleGenderChange}
-                  placeholder="M, F ou O"
-                  placeholderTextColor={theme.colors.subtext}
-                  maxLength={1}
-                  returnKeyType="done"
-                  onSubmitEditing={handleGenderSubmit}
-                />
-              </View>
-              {genderError && (
-                <Text style={styles.errorText}>Digite M, F ou O</Text>
-              )}
-            </View>
+            {genderError && (
+              <Text style={styles.errorText}>Digite M, F ou O</Text>
+            )}
           </View>
-
-          <TouchableOpacity
-            style={[styles.button, !isFormValid && styles.buttonDisabled]}
-            disabled={!isFormValid}
-            onPress={handleOpenReviewModal}
-          >
-            <Text style={styles.buttonText}>Continuar</Text>
-            <Ionicons
-              name="arrow-forward"
-              size={24}
-              color={theme.colors.background}
-            />
-          </TouchableOpacity>
         </View>
+
+        <TouchableOpacity
+          style={[styles.button, !isFormValid && styles.buttonDisabled]}
+          disabled={!isFormValid}
+          onPress={handleOpenReviewModal}
+        >
+          <Text style={styles.buttonText}>Continuar</Text>
+          <Ionicons
+            name="arrow-forward"
+            size={24}
+            color={theme.colors.background}
+          />
+        </TouchableOpacity>
       </View>
-      <Footer />
 
       <ReviewPatientModal
         visible={reviewModalVisible}
@@ -294,7 +289,7 @@ const PatientRegistration = () => {
         priority={storedPriority}
         onViewQueue={handleViewQueue}
       />
-    </SafeAreaView>
+    </View>
   );
 };
 
@@ -303,28 +298,13 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: theme.colors.background,
   },
-  content: {
-    flex: 1,
-  },
-  header: {
-    padding: 16,
-    backgroundColor: theme.colors.background,
-    alignItems: "center",
-    borderBottomWidth: 1,
-    borderBottomColor: theme.colors.surface,
-  },
-  headerText: {
-    fontSize: 20,
-    fontWeight: "bold",
-    color: theme.colors.text,
-  },
-  fixGap: {
-    gap: 2,
-  },
   formContainer: {
     flex: 1,
     padding: 16,
     gap: 16,
+  },
+  fixGap: {
+    gap: 2,
   },
   label: {
     fontSize: 16,
@@ -370,112 +350,6 @@ const styles = StyleSheet.create({
     color: theme.colors.background,
     fontSize: 16,
     fontWeight: "bold",
-  },
-  modalOverlay: {
-    flex: 1,
-    backgroundColor: 'rgba(0,0,0,0.4)',
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  modalContainer: {
-    backgroundColor: theme.colors.background,
-    borderRadius: 16,
-    padding: 24,
-    width: '85%',
-    alignItems: 'stretch',
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.2,
-    shadowRadius: 8,
-    elevation: 5,
-  },
-  modalTitleRow: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'center',
-    width: '100%',
-    position: 'relative',
-    marginBottom: 0,
-  },
-  modalTitle: {
-    fontSize: 20,
-    fontWeight: 'bold',
-    color: theme.colors.primary,
-    marginBottom: 16,
-    textAlign: 'center',
-    alignSelf: 'center',
-  },
-  modalDivider: {
-    height: 1,
-    backgroundColor: theme.colors.surface,
-    width: '100%',
-    marginBottom: 16,
-  },
-  modalInfoRow: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    marginBottom: 12,
-    gap: 8,
-    justifyContent: 'flex-start',
-  },
-  modalInfoText: {
-    fontSize: 16,
-    color: theme.colors.text,
-    marginLeft: 8,
-    textAlign: 'left',
-    flexShrink: 1,
-    flexWrap: 'wrap',
-    minWidth: 0,
-  },
-  modalButton: {
-    marginTop: 20,
-    backgroundColor: theme.colors.primary,
-    borderRadius: 8,
-    paddingVertical: 10,
-    paddingHorizontal: 32,
-    alignSelf: 'stretch',
-    width: '100%',
-  },
-  modalButtonContent: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    width: '100%',
-  },
-  modalButtonText: {
-    color: theme.colors.background,
-    fontSize: 16,
-    fontWeight: 'bold',
-  },
-  pillPriority: {
-    borderWidth: 1,
-    borderColor: '#FD4E4E',
-    backgroundColor: '#FFDADA',
-    borderRadius: 16,
-    paddingHorizontal: 16,
-    paddingVertical: 4,
-    alignSelf: 'flex-start',
-    marginBottom: 16,
-  },
-  pillPriorityText: {
-    color: '#FD4E4E',
-    fontWeight: 'bold',
-    fontSize: 14,
-  },
-  pillCommon: {
-    borderWidth: 1,
-    borderColor: '#5AA47B',
-    backgroundColor: '#D8FFEA',
-    borderRadius: 16,
-    paddingHorizontal: 16,
-    paddingVertical: 4,
-    alignSelf: 'flex-start',
-    marginBottom: 16,
-  },
-  pillCommonText: {
-    color: '#5AA47B',
-    fontWeight: 'bold',
-    fontSize: 14,
   },
   inputError: {
     borderWidth: 1,

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, SafeAreaView } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { theme } from '../../theme/theme';
@@ -29,9 +29,12 @@ const FooterItem = ({ icon, activeIcon, label, isActive, onPress }: FooterItemPr
   );
 };
 
-const Footer = () => {
-  const [activeTab, setActiveTab] = useState('cadastro');
+type FooterProps = {
+  activeTab: 'register' | 'queue' | 'history';
+  onTabChange: (tab: 'register' | 'queue' | 'history') => void;
+};
 
+const Footer = ({ activeTab, onTabChange }: FooterProps) => {
   return (
     <SafeAreaView style={styles.safeArea}>
       <View style={styles.container}>
@@ -40,21 +43,21 @@ const Footer = () => {
           activeIcon="person-add"
           label="Cadastro"
           isActive={activeTab === 'register'}
-          onPress={() => setActiveTab('register')}
+          onPress={() => onTabChange('register')}
         />
         <FooterItem
           icon="list-outline"
           activeIcon="list"
           label="Fila"
           isActive={activeTab === 'queue'}
-          onPress={() => setActiveTab('queue')}
+          onPress={() => onTabChange('queue')}
         />
-         <FooterItem
+        <FooterItem
           icon="time-outline"
           activeIcon="time"
           label="Historico"
           isActive={activeTab === 'history'}
-          onPress={() => setActiveTab('history')}
+          onPress={() => onTabChange('history')}
         />
       </View>
     </SafeAreaView>
