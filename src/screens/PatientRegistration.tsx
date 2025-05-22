@@ -19,6 +19,8 @@ const PatientRegistration = () => {
   const [gender, setGender] = useState("");
   const [reviewModalVisible, setReviewModalVisible] = useState(false);
   const [passwordModalVisible, setPasswordModalVisible] = useState(false);
+  const [generatedPassword, setGeneratedPassword] = useState("");
+  const [storedPriority, setStoredPriority] = useState<'Prioridade' | 'Comum'>('Comum');
   const [nameError, setNameError] = useState(false);
   const [ageError, setAgeError] = useState(false);
   const [genderError, setGenderError] = useState(false);
@@ -100,6 +102,15 @@ const PatientRegistration = () => {
   };
 
   const handleConfirmReview = () => {
+    // Store priority before clearing inputs
+    const priority = getPriority(age) || 'Comum';
+    setStoredPriority(priority);
+
+    // Generate password before clearing inputs
+    const prefix = priority === 'Prioridade' ? 'P' : 'C';
+    const randomNum = Math.floor(Math.random() * 1000).toString().padStart(3, '0');
+    setGeneratedPassword(`${prefix}${randomNum}`);
+
     // Blur all inputs
     nameInputRef.current?.blur();
     ageInputRef.current?.blur();
@@ -122,13 +133,6 @@ const PatientRegistration = () => {
   const handleViewQueue = () => {
     setPasswordModalVisible(false);
     // TODO: Navigate to queue screen
-  };
-
-  const generatePassword = () => {
-    const priority = getPriority(age);
-    const prefix = priority === 'Prioridade' ? 'P' : 'C';
-    const randomNum = Math.floor(Math.random() * 1000).toString().padStart(3, '0');
-    return `${prefix}${randomNum}`;
   };
 
   const handleNameSubmit = () => {
@@ -263,8 +267,8 @@ const PatientRegistration = () => {
       <PasswordModal
         visible={passwordModalVisible}
         onClose={() => setPasswordModalVisible(false)}
-        password={generatePassword()}
-        priority={getPriority(age)}
+        password={generatedPassword}
+        priority={storedPriority}
         onViewQueue={handleViewQueue}
       />
     </SafeAreaView>
