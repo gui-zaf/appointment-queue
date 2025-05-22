@@ -1,5 +1,5 @@
 import React from 'react';
-import { Modal, View, Text, TouchableOpacity, StyleSheet } from 'react-native';
+import { Modal, View, Text, TouchableOpacity, StyleSheet, Keyboard } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { theme } from '../../theme/theme';
 
@@ -30,17 +30,27 @@ const ReviewPatientModal: React.FC<ReviewPatientModalProps> = ({
   priority,
   onConfirm,
 }) => {
+  const handleClose = () => {
+    Keyboard.dismiss();
+    onClose();
+  };
+
+  const handleConfirm = () => {
+    Keyboard.dismiss();
+    onConfirm();
+  };
+
   return (
     <Modal
       visible={visible}
       transparent
       animationType="fade"
-      onRequestClose={onClose}
+      onRequestClose={handleClose}
     >
       <TouchableOpacity
         style={styles.modalOverlay}
         activeOpacity={1}
-        onPressOut={onClose}
+        onPressOut={handleClose}
       >
         <View style={styles.modalContainer} pointerEvents="box-none">
           <View style={styles.modalTitleRow}>
@@ -82,7 +92,7 @@ const ReviewPatientModal: React.FC<ReviewPatientModalProps> = ({
             <Ionicons name="medkit-outline" size={24} color={theme.colors.icon.active} />
             <Text style={styles.modalInfoText}>{specialty}</Text>
           </View>
-          <TouchableOpacity style={styles.modalButton} onPress={onConfirm}>
+          <TouchableOpacity style={styles.modalButton} onPress={handleConfirm}>
             <View style={styles.modalButtonContent}>
               <Text style={styles.modalButtonText}>Confirmar</Text>
               <Ionicons name="checkmark" size={22} color={theme.colors.background} style={{ marginLeft: 8 }} />

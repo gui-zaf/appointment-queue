@@ -1,4 +1,4 @@
-import React, { useState, useMemo } from "react";
+import React, { useState, useMemo, useRef } from "react";
 import {
   View,
   Text,
@@ -22,6 +22,10 @@ const PatientRegistration = () => {
   const [nameError, setNameError] = useState(false);
   const [ageError, setAgeError] = useState(false);
   const [genderError, setGenderError] = useState(false);
+
+  const nameInputRef = useRef<TextInput>(null);
+  const ageInputRef = useRef<TextInput>(null);
+  const genderInputRef = useRef<TextInput>(null);
 
   const formatName = (text: string) => {
     const cleanedText = text.replace(/[^a-zA-ZÀ-ÿ\s]/g, "");
@@ -96,6 +100,11 @@ const PatientRegistration = () => {
   };
 
   const handleConfirmReview = () => {
+    // Blur all inputs
+    nameInputRef.current?.blur();
+    ageInputRef.current?.blur();
+    genderInputRef.current?.blur();
+    
     setReviewModalVisible(false);
     setPasswordModalVisible(true);
   };
@@ -129,6 +138,7 @@ const PatientRegistration = () => {
                 color={nameError ? theme.colors.error : theme.colors.icon.active}
               />
               <TextInput
+                ref={nameInputRef}
                 style={styles.input}
                 value={name}
                 onChangeText={handleNameChange}
@@ -152,6 +162,7 @@ const PatientRegistration = () => {
                   color={ageError ? theme.colors.error : theme.colors.icon.active}
                 />
                 <TextInput
+                  ref={ageInputRef}
                   style={styles.input}
                   value={age}
                   onChangeText={handleAgeChange}
@@ -175,6 +186,7 @@ const PatientRegistration = () => {
                   color={genderError ? theme.colors.error : theme.colors.icon.active}
                 />
                 <TextInput
+                  ref={genderInputRef}
                   style={styles.input}
                   value={gender}
                   onChangeText={handleGenderChange}

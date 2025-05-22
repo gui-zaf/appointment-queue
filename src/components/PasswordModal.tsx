@@ -1,5 +1,5 @@
-import React from 'react';
-import { Modal, View, Text, TouchableOpacity, StyleSheet } from 'react-native';
+import React, { useEffect } from 'react';
+import { Modal, View, Text, TouchableOpacity, StyleSheet, Keyboard } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { theme } from '../../theme/theme';
 
@@ -18,6 +18,12 @@ const PasswordModal: React.FC<PasswordModalProps> = ({
   priority,
   onViewQueue,
 }) => {
+  useEffect(() => {
+    if (visible) {
+      Keyboard.dismiss();
+    }
+  }, [visible]);
+
   const now = new Date();
   const formattedDateTime = now.toLocaleString('pt-BR', {
     day: '2-digit',
@@ -29,17 +35,22 @@ const PasswordModal: React.FC<PasswordModalProps> = ({
     hour12: false,
   });
 
+  const handleClose = () => {
+    Keyboard.dismiss();
+    onClose();
+  };
+
   return (
     <Modal
       visible={visible}
       transparent
       animationType="fade"
-      onRequestClose={onClose}
+      onRequestClose={handleClose}
     >
       <TouchableOpacity
         style={styles.modalOverlay}
         activeOpacity={1}
-        onPressOut={onClose}
+        onPressOut={handleClose}
       >
         <View style={styles.modalContainer} pointerEvents="box-none">
           <View style={styles.modalTitleRow}>
