@@ -8,6 +8,7 @@ import Header from './src/components/Header';
 import Footer from './src/components/Footer';
 import { theme } from './theme/theme';
 import { NavigationProvider, useNavigation } from './src/contexts/NavigationContext';
+import { QueueProvider } from './src/contexts/QueueContext';
 
 const AppContent = () => {
   const { activeTab, changeTab } = useNavigation();
@@ -53,7 +54,9 @@ const AppContent = () => {
 export default function App() {
   return (
     <NavigationProvider>
-      <AppContent />
+      <QueueProvider>
+        <AppContent />
+      </QueueProvider>
     </NavigationProvider>
   );
 }

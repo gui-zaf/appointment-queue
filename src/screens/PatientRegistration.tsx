@@ -13,6 +13,15 @@ import ReviewPatientModal from '../components/ReviewPatientModal';
 import PasswordModal from '../components/PasswordModal';
 import { useNavigation } from '../contexts/NavigationContext';
 
+interface Patient {
+  name: string;
+  age: number;
+  password: string;
+  specialty: string;
+  priority: 'normal' | 'priority';
+  roomNumber: number;
+}
+
 type Tab = 'register' | 'queue' | 'history';
 
 const PatientRegistration = () => {
@@ -24,6 +33,7 @@ const PatientRegistration = () => {
   const [passwordModalVisible, setPasswordModalVisible] = useState(false);
   const [generatedPassword, setGeneratedPassword] = useState("");
   const [storedPriority, setStoredPriority] = useState<'Prioridade' | 'Comum'>('Comum');
+  const [storedPatient, setStoredPatient] = useState<Patient | null>(null);
   const [nameError, setNameError] = useState(false);
   const [ageError, setAgeError] = useState(false);
   const [genderError, setGenderError] = useState(false);
@@ -108,14 +118,24 @@ const PatientRegistration = () => {
     // Dismiss keyboard
     Keyboard.dismiss();
 
-    // Store priority before clearing inputs
+    // Create patient object
     const priority = getPriority(age) || 'Comum';
-    setStoredPriority(priority);
-
-    // Generate password before clearing inputs
     const prefix = priority === 'Prioridade' ? 'P' : 'C';
     const randomNum = Math.floor(Math.random() * 1000).toString().padStart(3, '0');
-    setGeneratedPassword(`${prefix}${randomNum}`);
+    const generatedPass = `${prefix}${randomNum}`;
+    const roomNumber = Math.floor(Math.random() * 10) + 1; // Random number between 1 and 10
+
+    const patient: Patient = {
+      name,
+      age: parseInt(age),
+      password: generatedPass,
+      specialty: getSpecialty(age),
+      priority: priority === 'Prioridade' ? 'priority' : 'normal',
+      roomNumber,
+    };
+
+    // Store patient data
+    setStoredPatient(patient);
 
     // Blur all inputs
     nameInputRef.current?.blur();
@@ -267,28 +287,26 @@ const PatientRegistration = () => {
 
       <ReviewPatientModal
         visible={reviewModalVisible}
-        onClose={() => {
-          Keyboard.dismiss();
-          setReviewModalVisible(false);
-        }}
+        onClose={() => setReviewModalVisible(false)}
+        onConfirm={handleConfirmReview}
         name={name}
         age={age}
         gender={gender}
         specialty={getSpecialty(age)}
         priority={getPriority(age)}
-        onConfirm={handleConfirmReview}
       />
 
-      <PasswordModal
-        visible={passwordModalVisible}
-        onClose={() => {
-          Keyboard.dismiss();
-          setPasswordModalVisible(false);
-        }}
-        password={generatedPassword}
-        priority={storedPriority}
-        onViewQueue={handleViewQueue}
-      />
+      {storedPatient && (
+        <PasswordModal
+          visible={passwordModalVisible}
+          onClose={() => {
+            setPasswordModalVisible(false);
+            setStoredPatient(null);
+          }}
+          patient={storedPatient}
+          onViewQueue={handleViewQueue}
+        />
+      )}
     </View>
   );
 };

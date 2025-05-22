@@ -2,22 +2,32 @@ import React, { useEffect } from 'react';
 import { Modal, View, Text, TouchableOpacity, StyleSheet, Keyboard } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { theme } from '../../theme/theme';
+import { useQueue } from '../contexts/QueueContext';
+
+interface Patient {
+  name: string;
+  age: number;
+  password: string;
+  specialty: string;
+  priority: 'normal' | 'priority';
+  roomNumber: number;
+}
 
 interface PasswordModalProps {
   visible: boolean;
   onClose: () => void;
-  password: string;
-  priority: string | null;
+  patient: Patient;
   onViewQueue: () => void;
 }
 
 const PasswordModal: React.FC<PasswordModalProps> = ({
   visible,
   onClose,
-  password,
-  priority,
+  patient,
   onViewQueue,
 }) => {
+  const { addToQueue } = useQueue();
+
   useEffect(() => {
     if (visible) {
       Keyboard.dismiss();
@@ -40,6 +50,13 @@ const PasswordModal: React.FC<PasswordModalProps> = ({
     onClose();
   };
 
+  const handleViewQueue = () => {
+    addToQueue(patient);
+    onViewQueue();
+  };
+
+  const isPriority = patient.priority === 'priority';
+
   return (
     <Modal
       visible={visible}
@@ -60,19 +77,19 @@ const PasswordModal: React.FC<PasswordModalProps> = ({
           
           <View style={[
             styles.passwordContainer,
-            priority === 'Prioridade' ? styles.pillPriority : styles.pillCommon
+            isPriority ? styles.pillPriority : styles.pillCommon
           ]}>
             <Ionicons 
               name="key-outline" 
               size={24} 
-              color={priority === 'Prioridade' ? '#FD4E4E' : '#5AA47B'} 
+              color={isPriority ? '#FD4E4E' : '#5AA47B'} 
               style={styles.passwordIcon}
             />
             <Text style={[
               styles.passwordText,
-              priority === 'Prioridade' ? styles.pillPriorityText : styles.pillCommonText
+              isPriority ? styles.pillPriorityText : styles.pillCommonText
             ]}>
-              {password}
+              {patient.password}
             </Text>
           </View>
 
@@ -85,7 +102,7 @@ const PasswordModal: React.FC<PasswordModalProps> = ({
 
           <Text style={styles.dateText}>Senha gerada em: {formattedDateTime}</Text>
 
-          <TouchableOpacity style={styles.modalButton} onPress={onViewQueue}>
+          <TouchableOpacity style={styles.modalButton} onPress={handleViewQueue}>
             <View style={styles.modalButtonContent}>
               <Text style={styles.modalButtonText}>Ver fila</Text>
               <Ionicons name="list" size={22} color={theme.colors.background} />
