@@ -78,13 +78,12 @@ const QueueScreen: React.FC = () => {
   };
 
   useEffect(() => {
-    // Limpa o timer anterior se existir
     if (timerRef.current) {
       clearInterval(timerRef.current);
     }
 
     if (isQueueActive && currentPassword) {
-      setCountdown(10); // Sempre começa em 10 segundos para a senha atual
+      setCountdown(10); 
       
       timerRef.current = setInterval(() => {
         setCountdown((prev) => {
@@ -106,21 +105,18 @@ const QueueScreen: React.FC = () => {
         clearInterval(timerRef.current);
       }
     };
-  }, [isQueueActive, currentPassword?.patient.password]);
+  }, [isQueueActive, currentPassword]);
 
   const handlePasswordPress = (password: string) => {
-    // Primeiro, vamos "deschamar" todas as senhas
     const updatedQueue = queue.map((item) => ({
       ...item,
       isCalled: false,
     }));
 
-    // Agora vamos chamar a senha clicada
     const finalQueue = updatedQueue.map((item) =>
       item.patient.password === password ? { ...item, isCalled: true } : item
     );
 
-    // Atualizar a fila
     updateQueue(finalQueue);
   };
 
